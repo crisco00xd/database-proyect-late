@@ -1,0 +1,145 @@
+import sqlalchemy
+from sqlalchemy import text, String
+from api.util.config import db
+import datetime
+from sqlalchemy.dialects.postgresql import JSONB, ARRAY
+from api.dao.room import Room
+
+
+class Appointments(db.Model):
+    __tablename__ = 'appointments'
+    appointment_id = db.Column(db.Integer, primary_key=True)
+    date_reserved = db.Column(db.TIMESTAMP, nullable=False)
+    owner_id = db.Column(db.Integer, db.ForeignKey('users.user_id'), nullable=False)
+    room_id = db.Column(db.Integer, db.ForeignKey('room.room_id'), nullable=False)
+    date_end = db.Column(db.TIMESTAMP, nullable=True)
+    rank_id = db.Column(db.Integer, nullable=False)
+    status_id = db.Column(db.Integer, nullable=False)
+    members = db.Column(ARRAY(String))
+    total_members = db.Column(db.Integer, nullable=False)
+
+    def __init__(self, **args):
+        self.date_reserved = args.get('date_reserved')
+        self.owner_id = args.get('owner_id')
+        self.date_end = args.get('date_end')
+        self.appointment_id = args.get('appointment_id')
+        self.rank_id = args.get('rank_id')
+        self.room_id = args.get('room_id')
+        self.status_id = args.get('status_id')
+        self.members = args.get('members')
+        self.total_members = args.get('total_members')
+
+    # TODO FIX NON RELATIONAL QUERIES
+    @property
+    def pk(self):
+        return self.appointment_id
+
+    @staticmethod
+    def getAppointments():
+        return Appointments().query.all()
+
+    @staticmethod
+    def getAppointmentById(aid):
+        sql = text("Select * from appointments Where appointmentid= :aid")
+        try:
+            db.engine.execute(sql, {'appointment_id': aid})
+            return "Success"
+
+        except:
+            return "Error"
+
+    @staticmethod
+    def getAppointmentsByUser(uid):
+        return Appointments().query.filter_by(appointmenter_id=uid).all()
+
+    @staticmethod
+    def getWhoAppointedRoomByTime(tid):
+        sql = text(
+            "Select DISTINCT owner_id, users.first_name, users.last_name From appointments, users Where appointments.date_reserved <= :td AND :td < appointments.date_end AND appointments.status_id=0 AND users.user_id = appointments.owner_id")
+        try:
+            return db.engine.execute(sql, {'td': tid['timeframe']})
+        except Exception as error:
+            return error
+
+    @staticmethod
+    def getAvailableRoomByTime(tid):
+        sql = text(
+            "Select Distinct on (room_id) room.room_id, name From room, unavailabletimestamps Where room.room_id not in (Select room_id from unavailabletimestamps) OR date_end < :td")
+        try:
+            return db.engine.execute(sql, {'td': tid['timeframe']})
+        except Exception as error:
+            print(error)
+            return error
+
+    @staticmethod
+    def getAvailableRoomByTimeframe(tid):
+        sql = text(
+            "Select Distinct on (room_id) room.room_id, room.name From room Where room.room_id not in (Select room_id from unavailabletimestamps) Limit 10")
+        try:
+            return db.engine.execute(sql, {'td': tid['timeframe1'],
+                                           'td2': tid['timeframe_end']})
+        except Exception as error:
+            print(error)
+            return error
+
+    @staticmethod
+    def getRoomSchedule(tid):
+        sql = text(
+            "Select room.room_id, room.name, appointments.date_reserved, appointments.date_end From appointments natural inner join room Where :td = appointments.room_id")
+        try:
+            return db.engine.execute(sql, {'td': tid['room_id']})
+        except Exception as error:
+            return error
+
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+        return self
+
+    @staticmethod
+    def createMeeting(rid):
+        try:
+            sql = text("Insert into appointments(date_reserved, owner_id, room_id, date_end, rank_id, status_id, members, total_members) values (:date_reserved, :uid, :td, :date_end, :rank_id, :status_id, :members, :total_members)")
+            db.engine.execute(sql, {'members': rid['members'],
+                                    'td': int(rid['room_id']),
+                                    'date_reserved': rid['date_reserved'],
+                                    'date_end': rid['date_end'],
+                                    'rank_id': int(rid['rank_id']),
+                                    'status_id': int(rid['status_id']),
+                                    'total_members': int(rid['total_members']),
+                                    'uid': int(rid['owner_id'])})
+            counter = 0
+            while counter < int(rid['total_members']):
+                sql = text(
+                    "Insert into unavailabletimestamps(user_id,room_id, date_reserved, date_end, comment) values (:uid, :td, :date_reserved, :date_end, '')")
+                db.engine.execute(sql, {'uid': int(rid['members'][counter]),
+                                        'td': int(rid['room_id']),
+                                        'date_reserved': rid['date_reserved'],
+                                        'date_end': rid['date_end']})
+                counter = counter + 1
+                continue
+            return 'Success Creating Meeting'
+        except Exception as error:
+            print(error)
+            return error
+
+    @staticmethod
+    def updateAppointment(rid, **args):
+        appointment = Appointments.getAppointmentById(rid)
+        appointment.owner_id = args.get('owner_id')
+        db.session.commit()
+        return appointment
+
+    @staticmethod
+    def cancelAppointment(rid):
+        appointment = Appointments.getAppointmentById(rid)
+        appointment.status_id = 3
+        db.session.commit()
+        return appointment
+
+    @staticmethod
+    def deleteAppointment(rid):
+        appointment = Appointments.getAppointmentById(rid)
+        db.session.delete(appointment)
+        db.session.commit()
+        return appointment
