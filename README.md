@@ -11,10 +11,4 @@ URL: ec2-52-87-123-108.compute-1.amazonaws.com <br />
 PORT: 5432 <br />
 Database: dajfdiih6spg04 <br />
 
-Grupo DB - BOO-RCG <br />
-
-
-Genesis Torres Pinto - genesis.torres15@upr.edu <br />
 Cristian Rivera Santiago - cristian.rivera16@upr.edu <br />
-Rolando Cruz Ramos - rolando.cruz3@upr.edu <br />
-Gabriela Cardona Blas - gabriela.cardona1@upr.edu <br />
