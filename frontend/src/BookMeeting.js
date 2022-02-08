@@ -1,13 +1,14 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useState, useEffect} from 'react';
 import {Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-import {Button, Card, Container, Modal, Form, Select} from "semantic-ui-react";
+import {Button, Card, Container, Modal, Form} from "semantic-ui-react";
 import user_info  from "./HomePage";
 import axios from "axios";
 import {add} from "react-big-calendar/lib/utils/dates";
 import {useNavigate} from "react-router-dom";
 import setIsAuth from "./UserView"
+import Select from 'react-select'
 
 
 // Event {
@@ -19,16 +20,23 @@ import setIsAuth from "./UserView"
 // }
  
 
-
+let elements = [];
 function BookMeeting(){
+
     const navigate = useNavigate();
     if(window.login != true || window.login == undefined){
         alert("NOT LOGGED IN")
         navigate('/home');
     }
+    const initialstate = {}
     const [dates, setDates] = useState([]);
     const [open, setOpen] = useState(false);
-    const localizer = momentLocalizer(moment)
+    const localizer = momentLocalizer(moment);
+
+
+    const [values, setValues] = useState(initialstate);
+
+
 
     const handleChange = e => {
         const { name, value } = e.target;
@@ -38,11 +46,23 @@ function BookMeeting(){
         });
       };
 
-    const [values, setValues] = useState({
-        "roomdata" : []
-    });
 
-        const create_appointment = (e) => {
+
+
+
+    function createElements(){
+        let i = 0;
+        let result = [];
+        while(values.roomdata[i]){
+            result.push(
+                {label: values.roomdata[i]['name'],
+                value: values.roomdata[i]['room_id']});
+            i += 1
+        }
+        elements = result;
+    }
+
+    const create_appointment = (e) => {
             var axios = require('axios');
             let current_info = dates.pop()
 
@@ -54,7 +74,6 @@ function BookMeeting(){
 
             values.owner_id = window.user_info['user_id']
             values.stock = 1
-            values.room_id = document.getElementById('room_number').value
             values.rank_id = window.user_info['rank_id']
             values.status_id = 1
             values.date_reserved = values.timeframe1
@@ -140,6 +159,7 @@ function BookMeeting(){
     }
 
     const getAvailableRoom = (e) => {
+
         var axios = require('axios');
         let current_info = dates.pop()
 
@@ -152,7 +172,7 @@ function BookMeeting(){
             values.timeframe_end = current_info['end']
         }
 
-        
+
         
         
         var data = JSON.stringify(values);
@@ -175,6 +195,8 @@ function BookMeeting(){
                   alert("No Rooms Available")
               }else{
                   values.roomdata = window.roomdata
+                  createElements();
+                  console.log(elements);
                   setOpen(true)
               }
 
@@ -185,16 +207,7 @@ function BookMeeting(){
         });
         
     }
-        function createElements(){
-        let elements = [];
-        let i = 0;
 
-        while(values.roomdata[i]){
-            elements.push(<div>Room: {values.roomdata[i]['name']} Room Number: {values.roomdata[i]['room_id']}</div>);
-            i += 1
-        }
-        return elements;
-    }
     function logout(){
         window.login = false
         console.log("NOT LOGGED IN")
@@ -228,27 +241,37 @@ function BookMeeting(){
         >
             <Modal.Header>Choose a Room!</Modal.Header>
             <Modal.Content>
-                <div> {createElements()} </div>
+                <h5> Available rooms: </h5>
+                <Select
+                        options={elements}
+                        placeholder={'Select...'}
+                        clearable={false}
+                        onChange={((e) => {setValues({ ...values, ...{ ['room']: e, ['room_id']: e.value} }); console.log(values.room);})}
+                        name="room"
+                        value={values.room}
+                    />
             <Form>
-                <Form.Input
-                                id = 'room_number'
-                                icon='lock'
-                                iconPosition='left'
-                                label='Room Number'
-                                placeholder='room_number'
-                                type='text'
-                                onChange = {handleChange}
-                />
-
+                {/*<Form.Input*/}
+                {/*                id = 'room_number'*/}
+                {/*                icon='lock'*/}
+                {/*                iconPosition='left'*/}
+                {/*                label='Room Number'*/}
+                {/*                placeholder='room_number'*/}
+                {/*                type='text'*/}
+                {/*                onChange = {handleChange}*/}
+                {/*/>*/}
+                <br/>
+                <h5> Invitees: </h5>
                 <Form.Input
                                 id = 'members'
                                 icon='lock'
                                 iconPosition='left'
-                                label='Members (Include Yourself)'
                                 placeholder='members'
                                 type='text'
                                 onChange = {handleChange}
                 />
+                <h5>*If Leave Blank It Will Assume Your Alone On The Meeting*</h5>
+                <br/>
                 <Button className='appointment-btn' content='Create Booking' primary onClick={create_appointment}/>
             </Form>
             </Modal.Content>
