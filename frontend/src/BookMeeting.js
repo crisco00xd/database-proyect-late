@@ -236,7 +236,7 @@ function BookMeeting(){
         <Modal
             centered={false}
             open={open}
-            onClose={() => setOpen(false)}
+            onClose={() => {setOpen(false); setValues(initialstate); }}
             onOpen={() => setOpen(true)}
         >
             <Modal.Header>Choose a Room!</Modal.Header>
@@ -276,7 +276,7 @@ function BookMeeting(){
             </Form>
             </Modal.Content>
             <Modal.Actions>
-                <Button onClick={() => setOpen(false)}>Cancel</Button>
+                <Button onClick={() => {setOpen(false); setValues(initialstate);}}>Cancel</Button>
             </Modal.Actions>
         </Modal>
         <Container fluid>
