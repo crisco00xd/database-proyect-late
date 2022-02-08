@@ -138,7 +138,8 @@ def getUnfulfilledAppointmentsByDept(dept_id):
 def getAppointmentsHistoryByDepartment(dept_id):
     return AppointmentsHandler.getAppointmentsHistoryByDepartment(dept_id)
 
-@app.route('/Appointments/room/uidTime', methods=['GET'])
+
+@app.route('/Appointments/room/get-owner-by-timeframe', methods=['POST'])
 def getOwnerByTime():
     return AppointmentsHandler.getWhoAppointedRoomByTime(request.json)
 

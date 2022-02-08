@@ -55,9 +55,10 @@ class Appointments(db.Model):
     @staticmethod
     def getWhoAppointedRoomByTime(tid):
         sql = text(
-            "Select DISTINCT owner_id, users.first_name, users.last_name From appointments, users Where appointments.date_reserved <= :td AND :td < appointments.date_end AND appointments.status_id=0 AND users.user_id = appointments.owner_id")
+            "Select first_name, last_name, email, date_reserved, date_end, name From appointments natural inner join users natural inner join room Where date_reserved >= :td  AND date_end <= :td2 ORDER BY date_reserved")
         try:
-            return db.engine.execute(sql, {'td': tid['timeframe']})
+            return db.engine.execute(sql, {'td': tid['timeframe'],
+                                           'td2': tid['timeframe2']})
         except Exception as error:
             return error
 
