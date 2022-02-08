@@ -92,6 +92,7 @@ class AppointmentsHandler:
     def getWhoAppointedRoomByTime(did):
         try:
             Appointment = Appointments.getWhoAppointedRoomByTime(did)
+            print(Appointment)
             d, a = {}, []
             for rowproxy in Appointment:
                 # rowproxy.items() returns an array like [(key0, value0), (key1, value1)]

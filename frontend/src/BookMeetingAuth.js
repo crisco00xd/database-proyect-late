@@ -40,6 +40,7 @@ function BookMeeting(){
     const [open9, setOpen9] = useState(false);
     const [open10, setOpen10] = useState(false);
     const [open11, setOpen11] = useState(false);
+    const [open12, setOpen12] = useState(false);
     const localizer = momentLocalizer(moment)
 
     const handleChange = e => {
@@ -361,9 +362,6 @@ function BookMeeting(){
 
         values.room_id = document.getElementById('room_id2').value;
 
-
-
-
         var data = JSON.stringify(values);
         console.log(data)
 
@@ -388,6 +386,51 @@ function BookMeeting(){
                   setOpen9(true);
               }
 
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+    }
+
+    const getOwnerByTimeframe = (e) => {
+        var axios = require('axios');
+
+        let current_info = dates.pop()
+
+        if(current_info == undefined){
+            alert("Please Select Dates")
+            return
+        }
+        else{
+            values.timeframe = current_info['start']
+            values.timeframe2 = current_info['end']
+        }
+
+        var data = JSON.stringify(values);
+        console.log(data)
+
+        var config = {
+          method: 'post',
+          url: 'http://localhost:5000/Appointments/room/get-owner-by-timeframe',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+        axios(config)
+        .then(function (response) {
+          if(response.data['Appointments']){
+              window.roomdata = response.data['Appointments']
+              console.log(window.roomdata);
+
+              if(Object.keys(window.roomdata).length == 0) {
+                  alert("This Timeframe Has No Schedule");
+              }else{
+                  values.roomdata = window.roomdata;
+                  setOpen12(true);
+              }
           }
         })
         .catch(function (error) {
@@ -444,7 +487,18 @@ function BookMeeting(){
         return elements;
     }
 
-    function createElements1(){
+    function createElements2(){
+        let elements = [];
+        let i = 0;
+
+        while(values.roomdata[i]){
+            elements.push(<div>First Name: {values.roomdata[i]['first_name']} <br></br> Last Name: {values.roomdata[i]['last_name']} <br></br> Date Reserved: {values.roomdata[i]['date_reserved']} <br></br> End Date: {values.roomdata[i]['date_end']}<br></br> Room: {values.roomdata[i]['name']}<br></br><br></br></div>);
+            i += 1
+        }
+        return elements;
+    }
+
+        function createElements1(){
         let elements = [];
         let i = 0;
 
@@ -825,6 +879,21 @@ function BookMeeting(){
             </Modal.Actions>
         </Modal>
 
+        <Modal
+            centered={false}
+            open={open12}
+            onClose={() => setOpen12(false)}
+            onOpen={() => setOpen12(true)}
+        >
+            <Modal.Header>Room Schedule</Modal.Header>
+            <Modal.Content>
+                <div> {createElements2()} </div>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => setOpen12(false)}>Cancel</Button>
+            </Modal.Actions>
+        </Modal>
+
         <Container fluid>
             <br></br>
             <h1>TimeFrame Settings</h1>
@@ -851,6 +920,10 @@ function BookMeeting(){
             fluid
             onClick={() => setOpen10(true)}
             > Get All User Schedule</Button>
+            <Button
+            fluid
+            onClick={getOwnerByTimeframe}
+            > See Who Appointed A Room At A Certain Time</Button>
             <br></br>
             <br></br>
             <h1>Room Settings</h1>
