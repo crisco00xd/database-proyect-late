@@ -584,6 +584,7 @@ function BookMeeting(){
                                 label='First Name'
                                 placeholder='first_name'
                                 type='text'
+                                value={window.user_info['first_name']}
                                 onChange = {handleChange}
                 />
 
@@ -594,6 +595,7 @@ function BookMeeting(){
                                 label='Last Name'
                                 placeholder='last_name'
                                 type='text'
+                                value={window.user_info['last_name']}
                                 onChange = {handleChange}
                 />
 
@@ -604,6 +606,7 @@ function BookMeeting(){
                                 label='Email'
                                 placeholder='email'
                                 type='text'
+                                value={window.user_info['email']}
                                 onChange = {handleChange}
                 />
 
@@ -614,6 +617,7 @@ function BookMeeting(){
                                 label='Password'
                                 placeholder='password'
                                 type='text'
+                                value={window.user_info['password']}
                                 onChange = {handleChange}
                 />
 
@@ -624,6 +628,7 @@ function BookMeeting(){
                                 label='Rank Id'
                                 placeholder='rank_id'
                                 type='text'
+                                value={window.user_info['rank_id']}
                                 onChange = {handleChange}
                 />
 
@@ -634,6 +639,7 @@ function BookMeeting(){
                                 label='User Id'
                                 placeholder='user_id'
                                 type='text'
+                                value={window.user_info['user_id']}
                                 onChange = {handleChange}
                 />
                 <Button className='appointment-btn' content='Update User' primary onClick={updateUser}/>
@@ -702,7 +708,6 @@ function BookMeeting(){
         >
             <Modal.Header>Modify Room Information</Modal.Header>
             <Modal.Content>
-                <div> {createElements()} </div>
             <Form>
                 <Form.Input
                                 id = 'room_name1'
@@ -738,7 +743,6 @@ function BookMeeting(){
         >
             <Modal.Header>Delete Room</Modal.Header>
             <Modal.Content>
-                <div> {createElements()} </div>
             <Form>
                 <Form.Input
                                 id = 'room_id'

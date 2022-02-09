@@ -47,9 +47,6 @@ function BookMeeting(){
       };
 
 
-
-
-
     function createElements(){
         let i = 0;
         let result = [];
@@ -67,7 +64,7 @@ function BookMeeting(){
             let current_info = dates.pop()
 
             if(document.getElementById('members').value != ""){
-                alert('Creating meeting with peers')
+                alert('Creating meeting with peers');
                 create_appointment_members();
                 return;
             }
@@ -80,6 +77,7 @@ function BookMeeting(){
             values.date_end = values.timeframe_end
             values.members = [values.owner_id]
             values.total_members = 1
+        values.comment = document.getElementById('comment').value
             window.values1 = values
 
 
@@ -125,6 +123,7 @@ function BookMeeting(){
             values.date_end = values.timeframe_end
             values.members = document.getElementById('members').value.split(',')
             values.total_members = values.members.length
+        values.comment = document.getElementById('comment').value
             window.values1 = values
 
 
@@ -251,16 +250,16 @@ function BookMeeting(){
                         value={values.room}
                     />
             <Form>
-                {/*<Form.Input*/}
-                {/*                id = 'room_number'*/}
-                {/*                icon='lock'*/}
-                {/*                iconPosition='left'*/}
-                {/*                label='Room Number'*/}
-                {/*                placeholder='room_number'*/}
-                {/*                type='text'*/}
-                {/*                onChange = {handleChange}*/}
-                {/*/>*/}
                 <br/>
+                <h5> Meeting Name: </h5>
+                <Form.Input
+                                id = 'comment'
+                                icon='lock'
+                                iconPosition='left'
+                                placeholder='comment'
+                                type='text'
+                                onChange = {handleChange}
+                />
                 <h5> Invitees: </h5>
                 <Form.Input
                                 id = 'members'

@@ -112,11 +112,12 @@ class Appointments(db.Model):
             counter = 0
             while counter < int(rid['total_members']):
                 sql = text(
-                    "Insert into unavailabletimestamps(user_id,room_id, date_reserved, date_end, comment) values (:uid, :td, :date_reserved, :date_end, '')")
+                    "Insert into unavailabletimestamps(user_id,room_id, date_reserved, date_end, comment) values (:uid, :td, :date_reserved, :date_end, :comment)")
                 db.engine.execute(sql, {'uid': int(rid['members'][counter]),
                                         'td': int(rid['room_id']),
                                         'date_reserved': rid['date_reserved'],
-                                        'date_end': rid['date_end']})
+                                        'date_end': rid['date_end'],
+                                        'comment': rid['comment']})
                 counter = counter + 1
                 continue
             return 'Success Creating Meeting'
