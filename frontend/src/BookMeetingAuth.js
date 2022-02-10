@@ -28,6 +28,10 @@ function BookMeeting(){
         alert("NOT LOGGED IN")
         navigate('/home');
     }
+    const initialstate = {
+        "roomdata" : [],
+        "user_info": []
+    }
     const [dates, setDates] = useState([]);
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
@@ -52,10 +56,7 @@ function BookMeeting(){
         });
       };
 
-    const [values, setValues] = useState({
-        "roomdata" : [],
-        "user_info": []
-    });
+    const [values, setValues] = useState(initialstate);
 //FINISH ROOM BUSY AND MEETING WITH PEERS
     const timeBusy = (e) => {
         var axios = require('axios');

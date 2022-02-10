@@ -119,7 +119,31 @@ function Schedule(){
         defaultDate={Date.now()}
         selected = {selected}
         onSelectEvent={handleSelected}
-        eventPropGetter={(colors)}
+        eventPropGetter={
+          (event) => {
+            let newStyle = {
+            borderRadius: '10px',
+            opacity: 0.8,
+            color: 'White',
+            border: '0px',
+            display: 'block'
+            };
+
+            if (event.title == 'To test') {
+              newStyle.backgroundColor = "red"
+            }
+            // if (event.is_cancelled) {
+            //   newStyle.backgroundColor = "red"
+            // }
+            // if (event.busy_time_id) {
+            //   newStyle.backgroundColor = "orange"
+            // }
+            return {
+              className: "",
+              style: newStyle
+            };
+          }
+        }
     >
 
     </Calendar>
