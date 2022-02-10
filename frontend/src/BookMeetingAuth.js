@@ -2,13 +2,14 @@ import React, {Component, useState} from 'react';
 import {Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-import {Button, Card, Container, Modal, Form, Select} from "semantic-ui-react";
+import {Button, Card, Container, Modal, Form} from "semantic-ui-react";
 import user_info  from "./HomePage";
 import axios from "axios";
 import {add} from "react-big-calendar/lib/utils/dates";
 import {useNavigate} from "react-router-dom";
 import setIsAuth from "./UserView"
 import reportWebVitals from "./reportWebVitals";
+import Select from 'react-select'
 
 
 // Event {
@@ -19,7 +20,7 @@ import reportWebVitals from "./reportWebVitals";
 //     resource?: any,
 // }
  
-
+let elements = [];
 
 function BookMeeting(){
     const navigate = useNavigate();
@@ -429,6 +430,7 @@ function BookMeeting(){
                   alert("This Timeframe Has No Schedule");
               }else{
                   values.roomdata = window.roomdata;
+                  createElements2();
                   setOpen12(true);
               }
           }
@@ -488,14 +490,31 @@ function BookMeeting(){
     }
 
     function createElements2(){
-        let elements = [];
+        let result = new Map();
+        let mySet = new Set();
         let i = 0;
 
         while(values.roomdata[i]){
-            elements.push(<div>First Name: {values.roomdata[i]['first_name']} <br></br> Last Name: {values.roomdata[i]['last_name']} <br></br> Date Reserved: {values.roomdata[i]['date_reserved']} <br></br> End Date: {values.roomdata[i]['date_end']}<br></br> Room: {values.roomdata[i]['name']}<br></br><br></br></div>);
+            let room_name = values.roomdata[i]['name'];
+            mySet.add(room_name);
+            if(!result.has(room_name)){
+                result.set(room_name, []);
+            }
+            result.get(room_name).push(
+                <div>First Name: {values.roomdata[i]['first_name']}
+                <br></br> Last Name: {values.roomdata[i]['last_name']} <br></br>
+                Date Reserved: {values.roomdata[i]['date_reserved']} <br></br>
+                End Date: {values.roomdata[i]['date_end']}<br></br> Room: {values.roomdata[i]['name']}
+                <br></br><br></br></div>);
+
             i += 1
         }
-        return elements;
+
+        let arr = Array.from(mySet);
+        for(let i = 0; i < arr.length; i++){
+              elements.push({label: arr[i],
+                value: result.get(arr[i])});
+        }
     }
 
         function createElements1(){
@@ -886,15 +905,32 @@ function BookMeeting(){
         <Modal
             centered={false}
             open={open12}
-            onClose={() => setOpen12(false)}
+            onClose={() => {
+                    setOpen12(false);
+                    elements = [];
+                    setValues(initialstate);
+                }}
             onOpen={() => setOpen12(true)}
         >
             <Modal.Header>Room Schedule</Modal.Header>
             <Modal.Content>
-                <div> {createElements2()} </div>
+                <Select
+                        options={elements}
+                        placeholder={'Select...'}
+                        clearable={false}
+                        onChange={((e) => {setValues({ ...values, ...{ ['room_name']: e, ['room_list']: e.value} }); console.log(values.room_name);})}
+                        name="room_name"
+                        value={values.room_name}
+                />
+                <br></br>
+            <div>{values.room_list}</div>
             </Modal.Content>
             <Modal.Actions>
-                <Button onClick={() => setOpen12(false)}>Cancel</Button>
+                <Button onClick={() => {
+                    setOpen12(false);
+                    elements = [];
+                    setValues(initialstate);
+                }}>Cancel</Button>
             </Modal.Actions>
         </Modal>
 
