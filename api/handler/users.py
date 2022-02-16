@@ -78,6 +78,11 @@ class UsersHandler:
     @staticmethod
     def createUser(pid):
         try:
+            checkDup = UsersHandler.getUserByEmail(pid)
+            print(checkDup)
+            if len(checkDup[0].json['user']) > 0:
+                return jsonify(reason="Email Already Exists"), 200
+
             user = Users.createUser(pid)
             result = {
                 "message": "Success Creating user!",
@@ -115,8 +120,11 @@ class UsersHandler:
     def login(json):
         try:
             if json['email'] == "" or json['password'] == "":
-                return jsonify(reason="Must fill both username and password fields."), 400
+                return jsonify(reason="Must fill both username and password fields."), 200
             user = UsersHandler.getUserByEmail(json)
+            print(user[0].json)
+            if len(user[0].json['user']) == 0:
+                return jsonify(reason="Incorrect email or password."), 200
             user_id = user[0].json['user'][0]['user_id']
             password = user[0].json['user'][0]['password']
             if user and password == json['password']:
@@ -128,7 +136,7 @@ class UsersHandler:
                 }
                 return jsonify(result), 200
             else:
-                return jsonify(reason="Incorrect email or password."), 401
+                return jsonify(reason="Incorrect email or password."), 200
         except Exception as e:
             return jsonify(reason="Server error", error=e.__str__()), 500
 
