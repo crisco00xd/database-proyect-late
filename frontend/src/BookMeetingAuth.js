@@ -282,7 +282,7 @@ function BookMeeting(){
     const createRoom = (e) => {
         var axios = require('axios');
 
-        values.room_name = document.getElementById('room_name1').value
+        values.room_name = document.getElementById('room_name2').value
         values.dept_id = 1
         values.stock = 1
 
@@ -705,7 +705,7 @@ function BookMeeting(){
             <Modal.Content>
             <Form>
                 <Form.Input
-                                id = 'room_name'
+                                id = 'room_name2'
                                 icon='lock'
                                 iconPosition='left'
                                 label='Room Name'

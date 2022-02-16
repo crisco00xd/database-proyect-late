@@ -30,11 +30,17 @@ function HomePage() {
         window.login = false
         var axios = require('axios');
 
-        values.email = document.getElementById('email').value
-        values.password = document.getElementById('password').value
+        values.email = document.getElementById('email1').value
+        values.password = document.getElementById('password1').value
         values.first_name = document.getElementById('first_name').value
         values.last_name = document.getElementById('last_name').value
         values.rank_id = document.getElementById('rank_id').value
+
+        if(values.email === '' || values.password === '' || values.first_name === '' || values.last_name === '' || values.rank_id === ''){
+            console.log(values)
+            alert("Blank Username or Password! \n\n Please Try Again");
+            return;
+        }
         window.values1 = values
         var data = JSON.stringify(values);
         console.log(data)
@@ -51,11 +57,17 @@ function HomePage() {
         axios(config)
         .then(function (response) {
          window.user_info = response.data['user'];
-          if(response.data){
+
+         if(response.data['reason'] == 'Email Already Exists'){
+             alert("Email Already Exists");
+             return;
+         }
+         else{
               alert("USER CREATED! " +
                   "Please Log In")
               navigate('/');
-          }
+         }
+
         })
         .catch(function (error) {
           console.log(error);
@@ -85,14 +97,23 @@ function HomePage() {
         
         axios(config)
         .then(function (response) {
-          window.user_info = response.data['user'];
-          console.log(window.user_info)
-          if(response.data['user']['user_id']){
+            console.log(response)
+            if(response.data['reason'] == 'Incorrect email or password.'){
+                alert("Wrong Username Or Password \n\n Please Try Again");
+              return;
+            }
+            if(response.data['reason'] == 'Must fill both username and password fields.'){
+                console.log(values)
+                alert("Blank Username or Password! \n\n Please Try Again");
+              return;
+            }
+          if(window.user_info = response.data['user']){
               alert("Your User ID is: " + response.data['user']['user_id'])
               console.log("Logged_in");
               window.login = true
               navigate('/UserView');
           }
+          console.log(window.user_info)
         })
         .catch(function (error) {
           console.log(error);
@@ -145,6 +166,21 @@ function HomePage() {
                     </Grid.Column>
                     <Grid.Column verticalAlign='middle'>
                     <Form>
+                        <Form.Input
+                                id = 'email1'
+                                icon='user'
+                                iconPosition='left'
+                                label='email'
+                                placeholder='email'
+                                onChange = {handleChange}
+                            />
+                            <Form.Input
+                                id = 'password1'
+                                icon='lock'
+                                iconPosition='left'
+                                label='password'
+                                onChange = {handleChange}
+                            />
                             <Form.Input
                                 id = 'first_name'
                                 icon='user'
