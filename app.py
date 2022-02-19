@@ -6,7 +6,7 @@ from api.handler.room import RoomHandler
 from api.handler.appointments import AppointmentsHandler
 from api.handler.unavailabletimestamps import UnavailableTimestampsHandler
 from api.handler.users import UsersHandler
-from api.handler.uservisits import UserVisitHandler
+from api.handler.userbusy import UserBusyHandler
 
 
 @app.route('/', methods=['GET'])
@@ -208,6 +208,10 @@ def getMostBusyUser():
 @app.route('/statistics/busy-rooms', methods=['POST'])
 def getBusyRoom():
     return UnavailableTimestampsHandler.findMostBookedRoom(request.json)
+
+@app.route('/userbusy/create-user-busy', methods=['POST'])
+def createUserBusy():
+    return UserBusyHandler.createUserBusy(request.json)
 
 if __name__ == '__main__':
     db.create_all()
