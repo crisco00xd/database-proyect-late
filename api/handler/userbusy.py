@@ -6,9 +6,9 @@ from api.util.utilities import Utilities
 class UserBusyHandler:
 
     @staticmethod
-    def getUserBusy(tid):
+    def getallUserBusy(tid):
         try:
-            reports = UserBusy.getUserBusy(tid)
+            reports = UserBusy.getAllUserBusy(tid)
             result_list = []
             for report in reports:
                 result_list.append(Utilities.raw_sql_to_dict(report))
@@ -21,15 +21,17 @@ class UserBusyHandler:
             return jsonify(reason="Server error", error=e.__str__()), 500
 
     @staticmethod
-    def getAllUserBusy():
+    def getUserBusy(rid):
         try:
-            user_busy = UserBusy.getAllUserBusy()
-            result_list = []
-            for report in user_busy:
-                result_list.append(Utilities.to_dict(report))
+            user_busy = UserBusy.getUserBusy(rid)
+            d, a = {}, []
+            for rowproxy in user_busy:
+                for column, value in rowproxy.items():
+                    # build up the dictionary
+                    d = {**d, **{column: value}}
+                a.append(d)
             result = {
-                "message": "Success!",
-                "result": result_list
+                "response": a
             }
             return jsonify(result), 200
         except Exception as e:
@@ -40,7 +42,6 @@ class UserBusyHandler:
         try:
             queryResponse = UserBusy.createVisit(report)
             result = {
-                "message": "Success!",
                 "response": queryResponse
             }
             return jsonify(result), 200
@@ -65,9 +66,8 @@ class UserBusyHandler:
     @staticmethod
     def updateUserBusy(tool_report):
         try:
-            requestResponse = UserBusy.updateUserBusy(tool_report)
+            requestResponse = UserBusy.updateVisit(tool_report)
             result = {
-                "message": "Success!",
                 "response": requestResponse
             }
             return jsonify(result), 200
@@ -77,9 +77,8 @@ class UserBusyHandler:
     @staticmethod
     def deleteUserBusy(report_id):
         try:
-            queryResponse = UserBusy.deleteUserBusy(report_id)
+            queryResponse = UserBusy.deleteVisit(report_id)
             result = {
-                "message": "Success!",
                 "response": queryResponse
             }
             return jsonify(result), 200
