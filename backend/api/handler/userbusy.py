@@ -1,14 +1,14 @@
 from flask import jsonify, session
-from api.dao.uservisits import UserVisit
+from api.dao.userbusy import UserBusy
 from api.util.utilities import Utilities
 
 
-class UserVisitHandler:
+class UserBusyHandler:
 
     @staticmethod
-    def getUserVisit(tid):
+    def getUserBusy(tid):
         try:
-            reports = UserVisit.getUserVisit(tid)
+            reports = UserBusy.getUserBusy(tid)
             result_list = []
             for report in reports:
                 result_list.append(Utilities.raw_sql_to_dict(report))
@@ -21,11 +21,11 @@ class UserVisitHandler:
             return jsonify(reason="Server error", error=e.__str__()), 500
 
     @staticmethod
-    def getAllUserVisit():
+    def getAllUserBusy():
         try:
-            userVisit = UserVisit.getAllUserVisit()
+            user_busy = UserBusy.getAllUserBusy()
             result_list = []
-            for report in UserVisit:
+            for report in user_busy:
                 result_list.append(Utilities.to_dict(report))
             result = {
                 "message": "Success!",
@@ -36,9 +36,9 @@ class UserVisitHandler:
             return jsonify(reason="Server error", error=e.__str__()), 500
 
     @staticmethod
-    def createUserVisit(report):
+    def createUserBusy(report):
         try:
-            queryResponse = UserVisit.createUserVisit(report)
+            queryResponse = UserBusy.createVisit(report)
             result = {
                 "message": "Success!",
                 "response": queryResponse
@@ -50,22 +50,22 @@ class UserVisitHandler:
     @staticmethod
     def getLatestReport(tool_id):
         try:
-            response = UserVisit.getLatestReport(tool_id)
-            userVisit = None
+            response = UserBusy.getLatestReport(tool_id)
+            UserBusy = None
             for report in response:
-                userVisit = Utilities.raw_sql_to_dict(report)
+                UserBusy = Utilities.raw_sql_to_dict(report)
             result = {
                 "message": "Success!",
-                "result": UserVisit
+                "result": UserBusy
             }
             return jsonify(result), 200
         except Exception as e:
             return jsonify(reason="Server error", error=e.__str__()), 500
         
     @staticmethod
-    def updateUserVisit(tool_report):
+    def updateUserBusy(tool_report):
         try:
-            requestResponse = UserVisit.updateUserVisit(tool_report)
+            requestResponse = UserBusy.updateUserBusy(tool_report)
             result = {
                 "message": "Success!",
                 "response": requestResponse
@@ -75,9 +75,9 @@ class UserVisitHandler:
             return jsonify(reason="Server error", error=e.__str__()), 500
 
     @staticmethod
-    def deleteUserVisit(report_id):
+    def deleteUserBusy(report_id):
         try:
-            queryResponse = UserVisit.deleteUserVisit(report_id)
+            queryResponse = UserBusy.deleteUserBusy(report_id)
             result = {
                 "message": "Success!",
                 "response": queryResponse
