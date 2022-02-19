@@ -26,8 +26,11 @@ function Schedule(){
     const [dates, setDates] = useState([{}]);
     let [dates1, setDates1] = useState([{}]);
     const [open, setOpen] = useState(false);
+    const [open1, setOpen1] = useState(false);
     const [selected, setSelected] = useState();
     const localizer = momentLocalizer(moment)
+    const useMountEffect = (fun) => useEffect(fun, [])
+    const [refresh, doRefresh] = useState([]);
 
     const [values, setValues] = useState({
         user_id: ''
@@ -71,8 +74,90 @@ function Schedule(){
                 'start': result.start,
                 'end': result.end
               })
+          }
+            setDates(dates1);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+    }
+
+    const getUserBusy = (e) => {
+        var axios = require('axios');
+
+        console.log(dates)
+
+        values.user_id = window.user_info['user_id']
+
+
+        var data = JSON.stringify(values);
+        console.log(values)
+        console.log(data)
+
+        var config = {
+          method: 'POST',
+          url: 'http://127.0.0.1:5000/userbusy/user-busy-get',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+            setDates1([]);
+            for(let i = 0; i < response.data['response'].length; i++) {
+
+                const result = {
+                    type: 'date',
+                    'start': (new Date(response.data['response'][i]['date_reserved'])),
+                    'end': (new Date(response.data['response'][i]['date_end'])),
+                    'name': 'Busy'
+                };
+
+                dates1.push({
+                'title': result.name,
+                'allDay': false,
+                'start': result.start,
+                'end': result.end
+              })
               setDates(dates1);
           }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+    }
+
+    const deleteUserBusy = (e) => {
+        var axios = require('axios');
+
+        values.user_id = window.user_info['user_id']
+
+
+        var data = JSON.stringify(values);
+
+        var config = {
+          method: 'POST',
+          url: 'http://127.0.0.1:5000/userbusy/user-busy-delete',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+            if (response.data['response'] == 'Success Deleting User Busy Status'){
+                alert("Deleted Busy Status Successfully");
+                setOpen1(false);
+                getSchedule();
+                getUserBusy();
+            }else{
+                alert('Could Not Delete Busy Status');
+            }
         })
         .catch(function (error) {
           console.log(error);
@@ -82,7 +167,15 @@ function Schedule(){
     const handleSelected = (event) => {
         setSelected(event);
         selected1 = event;
-        setOpen(true);
+        console.log(event)
+        if (event.title == 'Busy'){
+            values.date_reserved = event.start;
+            values.date_end = event.end;
+            setOpen1(true);
+        }else{
+            setOpen(true);
+        }
+
     }
 
     function colors (event, start, end, isSelected) {
@@ -110,6 +203,11 @@ function Schedule(){
         });
       };
 
+    useMountEffect(() => {
+        getSchedule();
+        getUserBusy();
+        return;
+    })
     return <Container style={{ height: 800 }}><Calendar
         localizer={localizer}
         startAccessor="start"
@@ -130,11 +228,11 @@ function Schedule(){
             };
 
             if (event.title == 'To test') {
+              newStyle.backgroundColor = "blue"
+            }
+            if (event.title == 'Busy') {
               newStyle.backgroundColor = "red"
             }
-            // if (event.is_cancelled) {
-            //   newStyle.backgroundColor = "red"
-            // }
             // if (event.busy_time_id) {
             //   newStyle.backgroundColor = "orange"
             // }
@@ -147,8 +245,6 @@ function Schedule(){
     >
 
     </Calendar>
-     <Button fluid onClick={getSchedule}> Get Schedule
-     </Button>
         <Modal
             centered={false}
             open={open}
@@ -159,24 +255,24 @@ function Schedule(){
             <Modal.Content>
 <Form>
                 <Form.Input
-                                id = 'first_name'
+                                id = 'date_reserved'
                                 icon='lock'
                                 iconPosition='left'
-                                label='First Name'
-                                placeholder='first_name'
+                                label='Start Date'
+                                placeholder='Start Date'
                                 type='text'
-                                value={window.user_info['first_name']}
+                                value={values.date_reserved}
                                 onChange = {handleChange}
                 />
 
                 <Form.Input
-                                id = 'last_name'
+                                id = 'date_end'
                                 icon='lock'
                                 iconPosition='left'
-                                label='Last Name'
-                                placeholder='last_name'
+                                label='End Date'
+                                placeholder='end_date'
                                 type='text'
-                                value={window.user_info['last_name']}
+                                value={values.date_end}
                                 onChange = {handleChange}
                 />
 
@@ -228,6 +324,44 @@ function Schedule(){
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => setOpen(false)}>Close</Button>
+            </Modal.Actions>
+        </Modal>
+
+        <Modal
+            centered={false}
+            open={open1}
+            onClose={() => setOpen1(false)}
+            onOpen={() => setOpen1(true)}
+        >
+            <Modal.Header>Modify Busy Status</Modal.Header>
+            <Modal.Content>
+        <Form>
+                <Form.Input
+                                id = 'date_reserved'
+                                icon='lock'
+                                iconPosition='left'
+                                label='Start Date'
+                                placeholder='Start Date'
+                                type='text'
+                                value={values.date_reserved}
+                                onChange = {handleChange}
+                />
+
+                <Form.Input
+                                id = 'date_end'
+                                icon='lock'
+                                iconPosition='left'
+                                label='End Date'
+                                placeholder='end_date'
+                                type='text'
+                                value={values.date_end}
+                                onChange = {handleChange}
+                />
+            </Form>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => setOpen1(false)}>Close</Button>
+                <Button onClick={deleteUserBusy}>Delete</Button>
             </Modal.Actions>
         </Modal>
     </Container>

@@ -213,6 +213,20 @@ def getBusyRoom():
 def createUserBusy():
     return UserBusyHandler.createUserBusy(request.json)
 
+
+@app.route('/userbusy/user-busy-update', methods=['POST'])
+def updateUserBusy():
+    return UserBusyHandler.updateUserBusy(request.json)
+
+@app.route('/userbusy/user-busy-delete', methods=['POST'])
+def deleteUserBusy():
+    return UserBusyHandler.deleteUserBusy(request.json)\
+
+
+@app.route('/userbusy/user-busy-get', methods=['POST'])
+def getUserBusy():
+    return UserBusyHandler.getUserBusy(request.json)
+
 if __name__ == '__main__':
     db.create_all()
     db.session.commit()

@@ -207,6 +207,50 @@ function BookMeeting(){
         
     }
 
+    const makeUserBusy = (e) => {
+
+        var axios = require('axios');
+        let current_info = dates.pop()
+
+        if(current_info == undefined){
+            alert("Please Select Dates")
+            return
+        }
+        else{
+            values.user_id = window.user_info['user_id']
+            values.date_reserved = current_info['start']
+            values.date_end = current_info['end']
+        }
+
+
+
+
+        var data = JSON.stringify(values);
+        console.log(data)
+
+        var config = {
+          method: 'POST',
+          url: 'http://localhost:5000/userbusy/create-user-busy',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+        axios(config)
+        .then(function (response) {
+          if(response.data['response']){
+              alert("Mark Timeframe Busy SuccessFully")
+          }
+          else{
+              alert("Timeframe Already Marked")
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+    }
+
     function logout(){
         window.login = false
         console.log("NOT LOGGED IN")
@@ -283,6 +327,10 @@ function BookMeeting(){
             fluid
             onClick={getAvailableRoom}
         > Book Meeting </Button>
+            <Button
+            fluid
+            onClick={makeUserBusy}
+        > Make My Time Unavailable </Button>
             <Button
             fluid
             onClick={logout}

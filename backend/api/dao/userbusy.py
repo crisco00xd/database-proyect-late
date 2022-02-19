@@ -24,8 +24,11 @@ class UserBusy(db.Model):
 
     @staticmethod
     def getUserBusy(user_id):
-        sql = text("Select * From userbusy Where :user_id = user_id");
-        return db.engine.execute(sql, {'user_id': user_id})
+        try:
+            sql = text("Select * From userbusy Where :user_id = user_id");
+            return db.engine.execute(sql, {'user_id': user_id['user_id']})
+        except Exception as error:
+            return error
 
     @staticmethod
     def createVisit(uid):
@@ -33,28 +36,36 @@ class UserBusy(db.Model):
             (user_id, date_reserved, date_end) \
             VALUES(:user_id, :date_reserved, :date_end)")
         try:
-            return db.engine.execute(sql, {'user_id': uid['user_id'],
-                                           'date_reserved': uid['date_reserved'],
-                                           'date_end': uid['date_end']});
+            db.engine.execute(sql, {'user_id': uid['user_id'],
+                                    'date_reserved': uid['date_reserved'],
+                                    'date_end': uid['date_end']});
+            return "Success Creating User Busy"
         except Exception as error:
             return error
 
     @staticmethod
     def updateVisit(rid):
-        sql = text("UPDATE userbusy SET user_id = :user_id ,date_reserved = :date_reserved, date_end = :date_end");
+        sql = text(
+            "UPDATE userbusy SET date_reserved = :date_reserved, date_end = :date_end WHERE user_id = :user_id AND date_reserved = :date_reserved_old AND date_end = :date_end_old");
         try:
-            return db.engine.execute(sql,
-                                     {'user_id': rid['user_id'],
-                                      'date_reserved': rid['date_reserved'],
-                                      'date_end': rid['date_end']
-                                      })
+            db.engine.execute(sql,
+                              {'user_id': rid['user_id'],
+                               'date_reserved': rid['date_reserved'],
+                               'date_end': rid['date_end'],
+                               'date_reserved_old': rid['date_reserved_old'],
+                               'date_end_old': rid['date_end_old']})
+            return "Success Updating User Busy Status"
         except Exception as error:
             return error
 
     @staticmethod
     def deleteVisit(rid):
-        sql = text("delete from userbusy where user_id = :id ")
+        sql = text(
+            "delete from userbusy WHERE user_id = :user_id AND date_reserved = :date_reserved AND date_end = :date_end ")
         try:
-            return db.engine.execute(sql, {'id': rid['user_id']})
+            db.engine.execute(sql, {'user_id': rid['user_id'],
+                                    'date_reserved': rid['date_reserved'],
+                                    'date_end': rid['date_end']})
+            return "Success Deleting User Busy Status"
         except Exception as error:
             return error
