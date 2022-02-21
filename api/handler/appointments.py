@@ -177,15 +177,17 @@ class AppointmentsHandler:
             return jsonify(reason="Server error", error=e.__str__()), 500
 
     @staticmethod
-    def getAppointmentsByUser(uid):
+    def getAppointmentsByRoomAndTime(uid):
         try:
-            Appointment = Appointments.getAppointmentsByUser(uid)
-            result_list = []
-            for Appointment in Appointments:
-                result_list.append(Utilities.to_dict(Appointment))
+            Appointment = Appointments.getAppointmentByRoomAndTime(uid)
+            d, a = {}, []
+            for rowproxy in Appointment:
+                for column, value in rowproxy.items():
+                    # build up the dictionary
+                    d = {**d, **{column: value}}
+                a.append(d)
             result = {
-                "message": "Success!",
-                "Appointments": result_list
+                "Appointments": a
             }
             return jsonify(result), 200
         except Exception as e:

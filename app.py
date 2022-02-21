@@ -111,9 +111,9 @@ def deleteAppointment(rid):
     return AppointmentsHandler.deleteAppointment(rid)
 
 
-@app.route('/Appointments/user/<int:uid>', methods=['GET'])
-def getAppointmentsByUser(uid):
-    return AppointmentsHandler.getAppointmentsByUser(uid)
+@app.route('/Appointments/get-meeting', methods=['POST'])
+def getAppointmentsByUser():
+    return AppointmentsHandler.getAppointmentsByRoomAndTime(request.json)
 
 
 @app.route('/Appointments/update-meeting', methods=['POST'])
