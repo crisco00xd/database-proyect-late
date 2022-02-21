@@ -20,7 +20,6 @@ class AppointmentsHandler:
         except Exception as e:
             return jsonify(reason="Server error", error=e.__str__()), 500
 
-
     @staticmethod
     def getAppointmentById(rid):
         try:
@@ -195,7 +194,6 @@ class AppointmentsHandler:
     @staticmethod
     def createAppointment(json):
 
-
         valid_parameters = Utilities.verify_parameters(json, ['stock', 'appointment_id', 'room_id', 'owner_id',
                                                               'date_reserved', 'date_end', 'rank_id', 'status'])
         if valid_parameters:
@@ -230,18 +228,16 @@ class AppointmentsHandler:
             return jsonify(reason="Invalid parameters"), 400
 
     @staticmethod
-    def updateAppointment(rid, json):
-        valid_parameters = Utilities.verify_parameters(json, ['quantity'])
-        if valid_parameters:
-            try:
-                updatedAppointment = Appointments.updateAppointment(rid, **valid_parameters)
-                result = {
-                    "message": "Success!",
-                    "room": Utilities.to_dict(updatedAppointment)
-                }
-                return jsonify(result), 200
-            except Exception as e:
-                return jsonify(reason="Server error", error=e.__str__()), 500
+    def updateAppointment(rid):
+        try:
+            updatedAppointment = Appointments.updateAppointment(rid)
+            result = {
+                "message": "Success!",
+                "room": updatedAppointment
+            }
+            return jsonify(result), 200
+        except Exception as e:
+            return jsonify(reason="Server error", error=e.__str__()), 500
 
     @staticmethod
     def cancelAppointment(rid):

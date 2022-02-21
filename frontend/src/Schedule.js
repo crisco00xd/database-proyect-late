@@ -24,18 +24,22 @@ function Schedule(){
     }
     let selected1 = [];
     const [dates, setDates] = useState([{}]);
+    const sleep = (milliseconds) => {
+  return new Promise(resolve => setTimeout(resolve, milliseconds))
+}
     let [dates1, setDates1] = useState([{}]);
     const [open, setOpen] = useState(false);
     const [open1, setOpen1] = useState(false);
     const [selected, setSelected] = useState();
     const localizer = momentLocalizer(moment)
     const useMountEffect = (fun) => useEffect(fun, [])
-    const [refresh, doRefresh] = useState([]);
+    const [refresh, setRefresh] = useState([]);
 
     const [values, setValues] = useState({
         user_id: ''
     });
-    const getSchedule = (e) => {
+
+    async function getSchedule(){
         var axios = require('axios');
 
         console.log(dates)
@@ -75,7 +79,6 @@ function Schedule(){
                 'end': result.end
               })
           }
-            setDates(dates1);
         })
         .catch(function (error) {
           console.log(error);
@@ -83,7 +86,7 @@ function Schedule(){
 
     }
 
-    const getUserBusy = (e) => {
+    async function getUserBusy(){
         var axios = require('axios');
 
         console.log(dates)
@@ -106,7 +109,6 @@ function Schedule(){
 
         axios(config)
         .then(function (response) {
-            setDates1([]);
             for(let i = 0; i < response.data['response'].length; i++) {
 
                 const result = {
@@ -122,8 +124,9 @@ function Schedule(){
                 'start': result.start,
                 'end': result.end
               })
-              setDates(dates1);
           }
+            console.log(dates1)
+            setDates(dates1);
         })
         .catch(function (error) {
           console.log(error);
@@ -131,7 +134,7 @@ function Schedule(){
 
     }
 
-    const deleteUserBusy = (e) => {
+    async function deleteUserBusy(){
         var axios = require('axios');
 
         values.user_id = window.user_info['user_id']
@@ -153,8 +156,7 @@ function Schedule(){
             if (response.data['response'] == 'Success Deleting User Busy Status'){
                 alert("Deleted Busy Status Successfully");
                 setOpen1(false);
-                getSchedule();
-                getUserBusy();
+                setRefresh(!(refresh));
             }else{
                 alert('Could Not Delete Busy Status');
             }
@@ -203,11 +205,22 @@ function Schedule(){
         });
       };
 
-    useMountEffect(() => {
-        getSchedule();
-        getUserBusy();
-        return;
-    })
+    // useMountEffect(() => {
+    //     getSchedule();
+    //     getUserBusy();
+    //     setDates(dates1);
+    //     return;
+    // })
+    useEffect(() => {
+        async function getData() {
+            await getSchedule();
+            console.log("Loaded meetings");
+            await getUserBusy();
+            console.log("Loaded User busy");
+        }
+        getData();
+    }, [refresh])
+
     return <Container style={{ height: 800 }}><Calendar
         localizer={localizer}
         startAccessor="start"

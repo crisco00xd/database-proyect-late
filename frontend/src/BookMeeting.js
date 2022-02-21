@@ -116,7 +116,6 @@ function BookMeeting(){
 
             values.owner_id = window.user_info['user_id']
             values.stock = 1
-            values.room_id = document.getElementById('room_number').value
             values.rank_id = window.user_info['rank_id']
             values.status_id = 1
             values.date_reserved = values.timeframe1

@@ -104,14 +104,6 @@ def getAppointmentByIdOrEdit(rid):
         return AppointmentsHandler.getAppointmentById(rid)
     elif request.method == 'DELETE':
         return AppointmentsHandler.cancelAppointment(rid)
-    else:
-        if 'fulfiller_id' not in request.json:
-            if 'amount_used' in request.json:
-                return AppointmentsHandler.addAmountUsed(rid, request.json)
-            else:
-                return AppointmentsHandler.updateAppointment(rid, request.json)
-        else:
-            return AppointmentsHandler.updateStatus(rid, request.json)
 
 
 @app.route('/Appointments/delete/<int:rid>', methods=['DELETE'])
@@ -122,6 +114,11 @@ def deleteAppointment(rid):
 @app.route('/Appointments/user/<int:uid>', methods=['GET'])
 def getAppointmentsByUser(uid):
     return AppointmentsHandler.getAppointmentsByUser(uid)
+
+
+@app.route('/Appointments/update-meeting', methods=['POST'])
+def updateMeeting():
+    return AppointmentsHandler.updateAppointment(request.json)
 
 
 @app.route('/Appointments/dept/<int:dept_id>', methods=['GET'])
@@ -157,6 +154,11 @@ def deleteUsers():
 @app.route('/user/get-user-by-id', methods=['POST'])
 def getUserById():
     return UsersHandler.getUserById(request.json)
+
+
+@app.route('/user/get-user-by-email', methods=['POST'])
+def getUserByemail():
+    return UsersHandler.getUserByEmail(request.json)
 
 
 @app.route('/login', methods=['POST'])
