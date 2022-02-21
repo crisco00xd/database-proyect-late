@@ -69,14 +69,16 @@ function Schedule(){
                     type: 'date',
                     'start': (new Date(response.data['Appointments'][i]['date_reserved'])),
                     'end': (new Date(response.data['Appointments'][i]['date_end'])),
-                    'name': response.data['Appointments'][i]['comment']
+                    'name': response.data['Appointments'][i]['comment'],
+                    'room_id': response.data['Appointments'][i]['room_id']
                 };
 
                 dates1.push({
-                'title': result.name,
-                'allDay': false,
-                'start': result.start,
-                'end': result.end
+                    'title': result.name,
+                    'allDay': false,
+                    'start': result.start,
+                    'end': result.end,
+                    'room_id': result.room_id
               })
           }
         })
@@ -134,6 +136,40 @@ function Schedule(){
 
     }
 
+    async function getMeetingInfo(){
+        var axios = require('axios');
+
+        values.user_id = window.user_info['user_id']
+
+
+        var data = JSON.stringify(values);
+
+        var config = {
+          method: 'POST',
+          url: 'http://127.0.0.1:5000/Appointments/get-meeting',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+            if(response.data['Appointments']){
+                values.members = response.data['Appointments'][0]['members'];
+                setOpen(true);
+            }
+            else{
+                alert('No Info Found. Error')
+                return
+            }
+
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+    }
     async function deleteUserBusy(){
         var axios = require('axios');
 
@@ -166,16 +202,19 @@ function Schedule(){
         });
 
     }
-    const handleSelected = (event) => {
+    const handleSelected = async (event) => {
         setSelected(event);
         selected1 = event;
         console.log(event)
-        if (event.title == 'Busy'){
+        if (event.title == 'Busy') {
             values.date_reserved = event.start;
             values.date_end = event.end;
             setOpen1(true);
-        }else{
-            setOpen(true);
+        } else {
+            values.date_reserved = event.start;
+            values.date_end = event.end;
+            values.room_id = event.room_id
+            await getMeetingInfo();
         }
 
     }
@@ -205,12 +244,6 @@ function Schedule(){
         });
       };
 
-    // useMountEffect(() => {
-    //     getSchedule();
-    //     getUserBusy();
-    //     setDates(dates1);
-    //     return;
-    // })
     useEffect(() => {
         async function getData() {
             await getSchedule();
@@ -290,49 +323,17 @@ function Schedule(){
                 />
 
                 <Form.Input
-                                id = 'email'
+                                id = 'members'
                                 icon='lock'
                                 iconPosition='left'
-                                label='Email'
-                                placeholder='email'
+                                label='Members'
+                                placeholder='members'
                                 type='text'
-                                value={window.user_info['email']}
+                                value={values.members}
                                 onChange = {handleChange}
                 />
 
-                <Form.Input
-                                id = 'password'
-                                icon='lock'
-                                iconPosition='left'
-                                label='Password'
-                                placeholder='password'
-                                type='text'
-                                value={window.user_info['password']}
-                                onChange = {handleChange}
-                />
-
-                <Form.Input
-                                id = 'rank_id'
-                                icon='lock'
-                                iconPosition='left'
-                                label='Rank Id'
-                                placeholder='rank_id'
-                                type='text'
-                                value={window.user_info['rank_id']}
-                                onChange = {handleChange}
-                />
-
-                <Form.Input
-                                id = 'user_id'
-                                icon='lock'
-                                iconPosition='left'
-                                label='User Id'
-                                placeholder='user_id'
-                                type='text'
-                                value={window.user_info['user_id']}
-                                onChange = {handleChange}
-                />
-                <Button className='appointment-btn' content='Update User' primary onClick={handleChange}/>
+                <Button className='appointment-btn' content='Update Meeting' primary onClick={handleChange}/>
             </Form>
             </Modal.Content>
             <Modal.Actions>

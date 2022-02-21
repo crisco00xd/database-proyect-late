@@ -55,8 +55,15 @@ class Appointments(db.Model):
             return "Error"
 
     @staticmethod
-    def getAppointmentsByUser(uid):
-        return Appointments().query.filter_by(appointmenter_id=uid).all()
+    def getAppointmentByRoomAndTime(uid):
+        sql = text(
+            "Select * From appointments Where room_id = :td AND date_reserved = :td2")
+        try:
+            return db.engine.execute(sql, {'td': uid['room_id'],
+                                           'td2': uid['date_reserved']})
+        except Exception as error:
+            print(error)
+            return error
 
     @staticmethod
     def getWhoAppointedRoomByTime(tid):
