@@ -1,6 +1,6 @@
 from flask import jsonify, session
-from api.dao.users import Users
-from api.util.utilities import Utilities
+from backend.api.dao.users import Users
+from backend.api.util.utilities import Utilities
 
 
 class UsersHandler:
@@ -119,6 +119,7 @@ class UsersHandler:
     @staticmethod
     def login(json):
         try:
+            print(type(json))
             if json['email'] == "" or json['password'] == "":
                 return jsonify(reason="Must fill both username and password fields."), 200
             user = UsersHandler.getUserByEmail(json)

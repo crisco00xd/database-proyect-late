@@ -1,9 +1,15 @@
+import json
+
 import sqlalchemy
 from sqlalchemy import text, String
 from api.util.config import db
 import datetime
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from api.dao.room import Room
+
+from backend.api.dao.users import Users
+from backend.api.handler.users import UsersHandler
+from backend.api.util.utilities import Utilities
 
 
 class Appointments(db.Model):
@@ -100,6 +106,15 @@ class Appointments(db.Model):
     @staticmethod
     def createMeeting(rid):
         try:
+            user_ids = []
+            for email in rid['members']:
+                request = {
+                    "email": email
+                }
+                response = UsersHandler.getUserByEmail(request)
+                userID = response[0].json['user'][0]['user_id']
+                user_ids.append(int(userID))
+
             sql = text("Insert into appointments(date_reserved, owner_id, room_id, date_end, rank_id, status_id, members, total_members) values (:date_reserved, :uid, :td, :date_end, :rank_id, :status_id, :members, :total_members)")
             db.engine.execute(sql, {'members': rid['members'],
                                     'td': int(rid['room_id']),
@@ -113,7 +128,7 @@ class Appointments(db.Model):
             while counter < int(rid['total_members']):
                 sql = text(
                     "Insert into unavailabletimestamps(user_id,room_id, date_reserved, date_end, comment) values (:uid, :td, :date_reserved, :date_end, :comment)")
-                db.engine.execute(sql, {'uid': int(rid['members'][counter]),
+                db.engine.execute(sql, {'uid': int(user_ids[counter]),
                                         'td': int(rid['room_id']),
                                         'date_reserved': rid['date_reserved'],
                                         'date_end': rid['date_end'],
@@ -126,11 +141,40 @@ class Appointments(db.Model):
             return error
 
     @staticmethod
-    def updateAppointment(rid, **args):
-        appointment = Appointments.getAppointmentById(rid)
-        appointment.owner_id = args.get('owner_id')
-        db.session.commit()
-        return appointment
+    def updateAppointment(rid):
+        try:
+            user_ids = []
+            for email in rid['members']:
+                request = {
+                    "email": email
+                }
+                response = UsersHandler.getUserByEmail(request)
+                userID = response[0].json['user'][0]['user_id']
+                user_ids.append(int(userID))
+
+            sql = text("Update appointments Set date_reserved = :date_reserved, owner_id = :uid, room_id = :td, date_end = :date_end, rank_id = :rank_id, status_id = :status_id, members = :members, total_members = :total_members  Where owner_id = :uid AND date_reserved = :date_reserved")
+            db.engine.execute(sql, {'members': rid['members'],
+                                    'td': int(rid['room_id']),
+                                    'date_reserved': rid['date_reserved'],
+                                    'date_end': rid['date_end'],
+                                    'rank_id': int(rid['rank_id']),
+                                    'status_id': int(rid['status_id']),
+                                    'total_members': int(rid['total_members']),
+                                    'uid': int(rid['owner_id'])})
+            counter = 0
+            while counter < int(rid['total_members']):
+                sql = text("Update unavailabletimestamps Set user_id = :uid,room_id = :td, date_reserved = :date_reserved, date_end = :date_end, comment = :comment Where user_id = :uid AND date_reserved = :date_reserved")
+                db.engine.execute(sql, {'uid': int(user_ids[counter]),
+                                        'td': int(rid['room_id']),
+                                        'date_reserved': rid['date_reserved'],
+                                        'date_end': rid['date_end'],
+                                        'comment': rid['comment']})
+                counter = counter + 1
+                continue
+            return 'Success Updating Meeting'
+        except Exception as error:
+            print(error)
+            return error
 
     @staticmethod
     def cancelAppointment(rid):

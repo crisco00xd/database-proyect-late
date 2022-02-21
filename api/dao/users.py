@@ -42,12 +42,13 @@ class Users(db.Model):
             return error
 
     @staticmethod
-    def getUserByEmail(uemail):
+    def getUserByEmail(rid):
         sql = text("Select * from users Where email = :uemail")
         try:
-            return db.engine.execute(sql, {'uemail': uemail['email']})
+            return db.engine.execute(sql, {'uemail': rid['email']})
 
         except Exception as error:
+            print('Error:' + error)
             return error
 
     # create user
