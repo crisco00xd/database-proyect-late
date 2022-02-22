@@ -159,10 +159,11 @@ class Appointments(db.Model):
                 userID = response[0].json['user'][0]['user_id']
                 user_ids.append(int(userID))
 
-            sql = text("Update appointments Set date_reserved = :date_reserved, owner_id = :uid, room_id = :td, date_end = :date_end, rank_id = :rank_id, status_id = :status_id, members = :members, total_members = :total_members  Where owner_id = :uid AND date_reserved = :date_reserved")
+            sql = text("Update appointments Set date_reserved = :date_reserved1, owner_id = :uid, room_id = :td, date_end = :date_end, rank_id = :rank_id, status_id = :status_id, members = :members, total_members = :total_members  Where owner_id = :uid AND date_reserved = :date_reserved")
             db.engine.execute(sql, {'members': rid['members'],
                                     'td': int(rid['room_id']),
                                     'date_reserved': rid['date_reserved'],
+                                    'date_reserved1': rid['date_reserved1'],
                                     'date_end': rid['date_end'],
                                     'rank_id': int(rid['rank_id']),
                                     'status_id': int(rid['status_id']),
@@ -170,10 +171,11 @@ class Appointments(db.Model):
                                     'uid': int(rid['owner_id'])})
             counter = 0
             while counter < int(rid['total_members']):
-                sql = text("Update unavailabletimestamps Set user_id = :uid,room_id = :td, date_reserved = :date_reserved, date_end = :date_end, comment = :comment Where user_id = :uid AND date_reserved = :date_reserved")
+                sql = text("Update unavailabletimestamps Set user_id = :uid,room_id = :td, date_reserved = :date_reserved1, date_end = :date_end, comment = :comment Where user_id = :uid AND date_reserved = :date_reserved")
                 db.engine.execute(sql, {'uid': int(user_ids[counter]),
                                         'td': int(rid['room_id']),
                                         'date_reserved': rid['date_reserved'],
+                                        'date_reserved1': rid['date_reserved1'],
                                         'date_end': rid['date_end'],
                                         'comment': rid['comment']})
                 counter = counter + 1

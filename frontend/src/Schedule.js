@@ -32,7 +32,6 @@ function Schedule(){
     const [open1, setOpen1] = useState(false);
     const [selected, setSelected] = useState();
     const localizer = momentLocalizer(moment)
-    const useMountEffect = (fun) => useEffect(fun, [])
     const [refresh, setRefresh] = useState([]);
 
     const [values, setValues] = useState({
@@ -155,7 +154,7 @@ function Schedule(){
 
         axios(config)
         .then(function (response) {
-            if(response.data['Appointments']){
+            if(response.data['Appointments'].length > 0){
                 values.members = response.data['Appointments'][0]['members'];
                 setOpen(true);
             }
@@ -170,6 +169,47 @@ function Schedule(){
         });
 
     }
+
+    async function updateMeeting(){
+        var axios = require('axios');
+
+        values.owner_id = window.user_info['user_id']
+        values.rank_id = window.user_info['rank_id']
+        values.status_id = 1
+        values.comment = document.getElementById('comment').value;
+        values.date_reserved1 = new Date(document.getElementById('date_reserved1').value);
+        values.date_end = new Date(document.getElementById('date_end').value);
+        values.members = document.getElementById('members').value.split(',');
+        values.total_members = values.members.length
+
+        console.log(values)
+        var data = JSON.stringify(values);
+
+        var config = {
+          method: 'POST',
+          url: 'http://127.0.0.1:5000/Appointments/update-meeting',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+            if (response.data['room'] == 'Success Updating Meeting'){
+                alert("Updated Meeting Successfully");
+                setOpen(false);
+                setRefresh(!(refresh));
+            }else{
+                alert('Could Not Modify');
+            }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+    }
+
     async function deleteUserBusy(){
         var axios = require('axios');
 
@@ -211,6 +251,7 @@ function Schedule(){
             values.date_end = event.end;
             setOpen1(true);
         } else {
+            values.comment = event.title;
             values.date_reserved = event.start;
             values.date_end = event.end;
             values.room_id = event.room_id
@@ -301,13 +342,13 @@ function Schedule(){
             <Modal.Content>
 <Form>
                 <Form.Input
-                                id = 'date_reserved'
+                                id = 'date_reserved1'
                                 icon='lock'
                                 iconPosition='left'
                                 label='Start Date'
                                 placeholder='Start Date'
                                 type='text'
-                                value={values.date_reserved}
+                                defaultValue={values.date_reserved}
                                 onChange = {handleChange}
                 />
 
@@ -318,7 +359,7 @@ function Schedule(){
                                 label='End Date'
                                 placeholder='end_date'
                                 type='text'
-                                value={values.date_end}
+                                defaultValue={values.date_end}
                                 onChange = {handleChange}
                 />
 
@@ -329,11 +370,21 @@ function Schedule(){
                                 label='Members'
                                 placeholder='members'
                                 type='text'
-                                value={values.members}
+                                defaultValue={values.members}
+                                onChange = {handleChange}
+                />
+                <Form.Input
+                                id = 'comment'
+                                icon='lock'
+                                iconPosition='left'
+                                label='Meeting Name'
+                                placeholder='Meeting Name'
+                                type='text'
+                                defaultValue={values.comment}
                                 onChange = {handleChange}
                 />
 
-                <Button className='appointment-btn' content='Update Meeting' primary onClick={handleChange}/>
+                <Button className='appointment-btn' content='Update Meeting' primary onClick={updateMeeting}/>
             </Form>
             </Modal.Content>
             <Modal.Actions>
