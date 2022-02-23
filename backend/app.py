@@ -18,6 +18,7 @@ def home():
 def getSchedule():
     return UnavailableTimestampsHandler.makeTimeInRoomUnavailable(request.json)
 
+
 @app.route('/create-meeting', methods=['POST'])
 def createMeetingWithPeers():
     return AppointmentsHandler.createMeeting(request.json)
@@ -38,6 +39,7 @@ def getAllAvailableRoomsByTimeframe():
 def setRoomBusy():
     return UnavailableTimestampsHandler.makeTimeInRoomUnavailable()
 
+
 @app.route('/rooms-schedule', methods=['POST'])
 def getRoomsSchedule():
     if request.method == 'POST':
@@ -50,7 +52,7 @@ def getUnavailableTimestamps():
         return UnavailableTimestampsHandler.getAllUnavailableTimestamps()
 
 
-@app.route('/rooms', methods=['GET', 'POST','PUT','DELETE'])
+@app.route('/rooms', methods=['GET', 'POST', 'PUT', 'DELETE'])
 def getAllRoomOrCreate():
     if request.method == 'GET':
         return RoomHandler.getAllRoom()
@@ -106,9 +108,14 @@ def getAppointmentByIdOrEdit(rid):
         return AppointmentsHandler.cancelAppointment(rid)
 
 
-@app.route('/Appointments/delete/<int:rid>', methods=['DELETE'])
-def deleteAppointment(rid):
-    return AppointmentsHandler.deleteAppointment(rid)
+@app.route('/Appointments/delete-meeting', methods=['POST'])
+def deleteAppointment():
+    return AppointmentsHandler.deleteAppointment(request.json)
+
+
+@app.route('/Appointments/delete-unavailable', methods=['POST'])
+def deleteUnavailableTimestamp():
+    return UnavailableTimestampsHandler.deleteUnavailableTimestamps(request.json)
 
 
 @app.route('/Appointments/get-meeting', methods=['POST'])
@@ -211,6 +218,7 @@ def getMostBusyUser():
 def getBusyRoom():
     return UnavailableTimestampsHandler.findMostBookedRoom(request.json)
 
+
 @app.route('/userbusy/create-user-busy', methods=['POST'])
 def createUserBusy():
     return UserBusyHandler.createUserBusy(request.json)
@@ -220,14 +228,16 @@ def createUserBusy():
 def updateUserBusy():
     return UserBusyHandler.updateUserBusy(request.json)
 
+
 @app.route('/userbusy/user-busy-delete', methods=['POST'])
 def deleteUserBusy():
-    return UserBusyHandler.deleteUserBusy(request.json)\
+    return UserBusyHandler.deleteUserBusy(request.json)
 
 
 @app.route('/userbusy/user-busy-get', methods=['POST'])
 def getUserBusy():
     return UserBusyHandler.getUserBusy(request.json)
+
 
 if __name__ == '__main__':
     db.create_all()

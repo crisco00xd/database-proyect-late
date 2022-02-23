@@ -1,6 +1,8 @@
 from api.util.config import db
 from sqlalchemy import text
 
+from backend.api.handler.users import UsersHandler
+
 
 class UnavailableTimestamps(db.Model):
     __tablename__ = 'unavailabletimestamps'
@@ -36,6 +38,30 @@ class UnavailableTimestamps(db.Model):
     @staticmethod
     def getUnavailableTimestampsById(stat_id):
         return UnavailableTimestamps().query.filter_by(UnavailableTimestamps_id=stat_id).first()
+
+    @staticmethod
+    def deleteUnavailableTimestamps(rid):
+        try:
+            user_ids = []
+            for email in rid['deleted_members']:
+                request = {
+                    "email": email
+                }
+                response = UsersHandler.getUserByEmail(request)
+                userID = response[0].json['user'][0]['user_id']
+                user_ids.append(int(userID))
+
+            counter = 0
+            while counter < len(user_ids):
+                sql = text("delete from unavailabletimestamps Where user_id = :uid AND date_reserved = :date_reserved")
+                db.engine.execute(sql, {'uid': int(user_ids[counter]),
+                                        'date_reserved': rid['date_reserved']})
+                counter = counter + 1
+                continue
+            return "Success Clearing Unavailable Timestamp"
+        except Exception as error:
+            print(error)
+            return "Cannot Delete Busy"
 
     @staticmethod
     def makeTimeInRoomUnavailable(rid):
@@ -80,7 +106,8 @@ class UnavailableTimestamps(db.Model):
     @staticmethod
     def getFreeTimeForMeetings(rid):
         try:
-            sql = text("Select Distinct on (room_id) room.room_id, name, date_end From room natural inner join appointments Where room.room_id not in (Select room_id from unavailabletimestamps Where (:td >= date_reserved and :td <= date_end) or (:td2 >= date_reserved and :td2 <= date_end) or (:td <= date_reserved and :td2 >= date_end))")
+            sql = text(
+                "Select Distinct on (room_id) room.room_id, name, date_end From room natural inner join appointments Where room.room_id not in (Select room_id from unavailabletimestamps Where (:td >= date_reserved and :td <= date_end) or (:td2 >= date_reserved and :td2 <= date_end) or (:td <= date_reserved and :td2 >= date_end))")
             return db.engine.execute(sql, {"td": rid["timeframe1"],
                                            "td2": rid['timeframe2']})
         except Exception as error:
@@ -90,7 +117,8 @@ class UnavailableTimestamps(db.Model):
     @staticmethod
     def findBusiestHours(rid):
         try:
-            sql = text("SELECT to_char(date_reserved, 'HH24:MI') as Most_Appointed_Starting_time, to_char(date_end, 'HH24:MI') as Most_Appointed_Ending_time, count(*) as amount_of_appointments from appointments GROUP BY Most_Appointed_Starting_time, Most_Appointed_Ending_time order by  amount_of_appointments desc limit 5")
+            sql = text(
+                "SELECT to_char(date_reserved, 'HH24:MI') as Most_Appointed_Starting_time, to_char(date_end, 'HH24:MI') as Most_Appointed_Ending_time, count(*) as amount_of_appointments from appointments GROUP BY Most_Appointed_Starting_time, Most_Appointed_Ending_time order by  amount_of_appointments desc limit 5")
             return db.engine.execute(sql)
         except Exception as error:
             print(error)
@@ -99,7 +127,8 @@ class UnavailableTimestamps(db.Model):
     @staticmethod
     def findMostBookedUsers(rid):
         try:
-            sql = text("select user_id, count(*) as count from unavailabletimestamps group by user_id order by count desc limit 10;")
+            sql = text(
+                "select user_id, count(*) as count from unavailabletimestamps group by user_id order by count desc limit 10;")
             return db.engine.execute(sql)
         except Exception as error:
             print(error)
@@ -108,7 +137,8 @@ class UnavailableTimestamps(db.Model):
     @staticmethod
     def findMostBookedRoom(rid):
         try:
-            sql = text("select room_id, count(*) as count from appointments group by room_id order by count desc limit 10")
+            sql = text(
+                "select room_id, count(*) as count from appointments group by room_id order by count desc limit 10")
             return db.engine.execute(sql)
         except Exception as error:
             print(error)
@@ -117,7 +147,8 @@ class UnavailableTimestamps(db.Model):
     @staticmethod
     def findMostUsedRoom(rid):
         try:
-            sql = text("select room_id, count(*) as count from appointments group by room_id order by count desc limit 1")
+            sql = text(
+                "select room_id, count(*) as count from appointments group by room_id order by count desc limit 1")
             return db.engine.execute(sql)
         except Exception as error:
             print(error)

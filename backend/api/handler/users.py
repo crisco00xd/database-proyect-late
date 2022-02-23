@@ -119,7 +119,6 @@ class UsersHandler:
     @staticmethod
     def login(json):
         try:
-            print(type(json))
             if json['email'] == "" or json['password'] == "":
                 return jsonify(reason="Must fill both username and password fields."), 200
             user = UsersHandler.getUserByEmail(json)

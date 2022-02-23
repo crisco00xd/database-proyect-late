@@ -6,6 +6,14 @@ import {Button, Card, Container, Form, Modal} from "semantic-ui-react";
 import axios from "axios";
 import "./BookMeeting.js";
 import {useNavigate} from "react-router-dom";
+import Select from "react-select";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Checkbox from "@mui/material/Checkbox";
+import ListItemText from "@mui/material/ListItemText";
+import List from "@mui/material/List";
+
 
 // Event {
 //     title: string,
@@ -35,9 +43,61 @@ function Schedule(){
     const [refresh, setRefresh] = useState([]);
 
     const [values, setValues] = useState({
-        user_id: ''
+        user_id: '',
+        members: [],
+        deleted_members: []
     });
 
+    const [checked, setChecked] = useState([0])
+
+
+
+    const handleToggle = (value) => () => {
+        const currentIndex = checked.indexOf(value);
+        const newChecked = [...checked];
+
+        if (currentIndex === -1) {
+            newChecked.push(value);
+        } else {
+            newChecked.splice(currentIndex, 1);
+        }
+
+        setChecked(newChecked);
+    }
+
+        function getMembersList(){
+            return (values.members.map((value) => {
+                            const labelId = `checkbox-list-label-${value}`;
+
+                            return (
+                              <ListItem
+                                key={value}
+                                disablePadding
+                              >
+                                <ListItemButton role={undefined} onClick={handleToggle(value)} dense>
+                                  <ListItemIcon>
+                                    <Checkbox
+                                      edge="start"
+                                      checked={checked.indexOf(value) !== -1}
+                                      tabIndex={-1}
+                                      disableRipple
+                                      inputProps={{ 'aria-labelledby': labelId }}
+                                    />
+                                  </ListItemIcon>
+                                  <ListItemText id={labelId} primary={value} />
+                                </ListItemButton>
+                              </ListItem>
+                            );
+                          }))
+    }
+
+    let membersList = getMembersList();
+
+    useEffect(() => {membersList = getMembersList(); }, [values.members])
+
+    function intersection(arr1, arr2) {
+      return arr1.filter(elem => !(arr2.includes(elem)));
+    }
     async function getSchedule(){
         var axios = require('axios');
 
@@ -179,7 +239,6 @@ function Schedule(){
         values.comment = document.getElementById('comment').value;
         values.date_reserved1 = new Date(document.getElementById('date_reserved1').value);
         values.date_end = new Date(document.getElementById('date_end').value);
-        values.members = document.getElementById('members').value.split(',');
         values.total_members = values.members.length
 
         console.log(values)
@@ -210,6 +269,47 @@ function Schedule(){
 
     }
 
+
+    async function deleteMeeting(){
+        var axios = require('axios');
+
+        values.owner_id = window.user_info['user_id']
+        values.rank_id = window.user_info['rank_id']
+        values.status_id = 1
+        values.comment = document.getElementById('comment').value;
+        values.date_end = new Date(document.getElementById('date_end').value);
+        values.members = values.members;
+        values.total_members = values.members.length
+
+        console.log(values)
+        var data = JSON.stringify(values);
+
+        var config = {
+          method: 'POST',
+          url: 'http://127.0.0.1:5000/Appointments/delete-meeting',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+            if (response.data['room'] == 'Success Deleting Meeting'){
+                alert("Deleted Meeting Successfully");
+                setOpen(false);
+                setRefresh(!(refresh));
+            }else{
+                alert('Could Not Delete');
+            }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+
+
     async function deleteUserBusy(){
         var axios = require('axios');
 
@@ -231,7 +331,6 @@ function Schedule(){
         .then(function (response) {
             if (response.data['response'] == 'Success Deleting User Busy Status'){
                 alert("Deleted Busy Status Successfully");
-                setOpen1(false);
                 setRefresh(!(refresh));
             }else{
                 alert('Could Not Delete Busy Status');
@@ -242,6 +341,37 @@ function Schedule(){
         });
 
     }
+
+     async function deleteMembers(){
+        var axios = require('axios');
+
+
+        var data = JSON.stringify(values);
+
+        var config = {
+          method: 'POST',
+          url: 'http://127.0.0.1:5000/Appointments/delete-unavailable',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+            if (response.data['response'] == 'Success Clearing Unavailable Timestamp'){
+                alert("Deleted User Successfully");
+                setRefresh(!(refresh));
+            }else{
+                alert('Could Not Delete User');
+            }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+    }
+
     const handleSelected = async (event) => {
         setSelected(event);
         selected1 = event;
@@ -294,6 +424,15 @@ function Schedule(){
         }
         getData();
     }, [refresh])
+
+    function getDate(date_reserved){
+        let date = new Date(date_reserved)
+        if(date.getMinutes() == 0){
+            return date.toLocaleDateString() + '  ' + date.getHours() + ':' + date.getMinutes() + date.getMinutes()
+        }
+        return date.toLocaleDateString() + '  ' + date.getHours() + ':' + date.getMinutes()
+    }
+
 
     return <Container style={{ height: 800 }}><Calendar
         localizer={localizer}
@@ -348,8 +487,9 @@ function Schedule(){
                                 label='Start Date'
                                 placeholder='Start Date'
                                 type='text'
-                                defaultValue={values.date_reserved}
+                                defaultValue={getDate(values.date_reserved)}
                                 onChange = {handleChange}
+                                readOnly = 'readonly'
                 />
 
                 <Form.Input
@@ -359,20 +499,46 @@ function Schedule(){
                                 label='End Date'
                                 placeholder='end_date'
                                 type='text'
-                                defaultValue={values.date_end}
+                                defaultValue={getDate(values.date_end)}
                                 onChange = {handleChange}
+                                readOnly = 'readonly'
                 />
+                <br></br>
+    {values.members &&
+    <div>
+        <Modal.Header>Meeting Members</Modal.Header>
+                    <Modal.Content style={{maxHeight: 100, overflow: 'auto'}}>
+                        <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+                      {membersList}
+                    </List>
 
-                <Form.Input
-                                id = 'members'
-                                icon='lock'
-                                iconPosition='left'
-                                label='Members'
-                                placeholder='members'
-                                type='text'
-                                defaultValue={values.members}
-                                onChange = {handleChange}
-                />
+                </Modal.Content>
+                        <br></br>
+                <Button className='appointment-btn' content='Delete Selected Members' primary onClick={
+                    () => {
+                            for(let i = 0; i < checked.length; i++){
+                                const currentIndex = values.members.indexOf(checked[i]);
+
+                                if(currentIndex !== -1){
+                                    values.members.splice(currentIndex, 1);
+                                    values.deleted_members.push(checked[i]);
+                                    checked.splice(i--, 1);
+                                }
+                        }
+                            updateMeeting();
+                            deleteMembers();
+                            console.log(values.members)
+                            console.log(checked)
+
+                            setChecked([])
+
+    }
+
+
+                }/><br></br><br></br><br></br>
+    </div>
+    }
+
                 <Form.Input
                                 id = 'comment'
                                 icon='lock'
@@ -385,6 +551,7 @@ function Schedule(){
                 />
 
                 <Button className='appointment-btn' content='Update Meeting' primary onClick={updateMeeting}/>
+                <Button className='appointment-btn' content='Delete Meeting' primary onClick={deleteMeeting}/>
             </Form>
             </Modal.Content>
             <Modal.Actions>
@@ -398,7 +565,7 @@ function Schedule(){
             onClose={() => setOpen1(false)}
             onOpen={() => setOpen1(true)}
         >
-            <Modal.Header>Modify Busy Status</Modal.Header>
+            <Modal.Header>Busy Status</Modal.Header>
             <Modal.Content>
         <Form>
                 <Form.Input
@@ -408,7 +575,7 @@ function Schedule(){
                                 label='Start Date'
                                 placeholder='Start Date'
                                 type='text'
-                                value={values.date_reserved}
+                                value={getDate(values.date_reserved)}
                                 onChange = {handleChange}
                 />
 
@@ -419,7 +586,7 @@ function Schedule(){
                                 label='End Date'
                                 placeholder='end_date'
                                 type='text'
-                                value={values.date_end}
+                                value={getDate(values.date_end)}
                                 onChange = {handleChange}
                 />
             </Form>

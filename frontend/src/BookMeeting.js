@@ -140,6 +140,12 @@ function BookMeeting(){
         axios(config)
         .then(function (response) {
           console.log(JSON.stringify(response.data));
+
+          if(response.data["Appointment"] == "Timeframe Conflicts With Selected Users Schedule"){
+              alert("Timeframe Conflicts With Selected Users Schedule")
+              return;
+          }
+
           if(response.data["Appointment"] == "Success Creating Meeting"){
               alert("Created Meeting Successfully")
               setOpen(false)
