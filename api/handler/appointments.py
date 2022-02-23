@@ -250,14 +250,28 @@ class AppointmentsHandler:
         }
         return jsonify(result), 200
 
+
+    @staticmethod
+    def getOverlappingTimestamps(user_ids, rid):
+        try:
+            overAppointment = Appointments.getOverlappingMeetings(user_ids, rid)
+            result = {
+                "response": overAppointment
+            }
+            return jsonify(result), 200
+        except Exception as e:
+            return jsonify(reason="Server error", error=e.__str__()), 500
     @staticmethod
     def deleteAppointment(rid):
-        deletedAppointment = Appointments.deleteAppointment(rid)
-        result = {
-            "message": "Success!",
-            "Appointment": Utilities.to_dict(deletedAppointment)
-        }
-        return jsonify(result), 200
+        try:
+            deleteAppointment = Appointments.deleteAppointment(rid)
+            result = {
+                "message": "Success!",
+                "room": deleteAppointment
+            }
+            return jsonify(result), 200
+        except Exception as e:
+            return jsonify(reason="Server error", error=e.__str__()), 500
 
     @staticmethod
     def updateStatus(rid, json):
