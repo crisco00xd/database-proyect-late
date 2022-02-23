@@ -111,9 +111,61 @@ class Appointments(db.Model):
         return self
 
     @staticmethod
+    def getOverlappingTimestamps(user_ids, rid):
+        try:
+            unavailabletimestamp = Appointments.getOverlappingMeetings(user_ids,rid)
+            d, a = {}, []
+            for rowproxy in unavailabletimestamp:
+                for column, value in rowproxy.items():
+                    # build up the dictionary
+                    d = {**d, **{column: value}}
+                a.append(d)
+            result = {
+                "appoints": a
+            }
+            return jsonify(result), 200
+        except Exception as e:
+            return jsonify(reason="Server error", error=e.__str__()), 500
+
+    @staticmethod
+    def getOverlappingMeetings(user_ids, rid):
+        try:
+            conditional_statement = "%s = '%s'" % ("user_id", str(user_ids[0]))
+            for i in range(1, len(user_ids)):
+                conditional_statement += " or %s = '%s'" % ("user_id", str(user_ids[i]))
+
+            query = "SELECT date_reserved, date_end from \"users\" natural join \"unavailabletimestamps\" \
+            natural join \"appointments\" where (" + conditional_statement + ") and \
+            ( \
+                (date_reserved between :date_reserved \
+                and :date_end \
+                or date_end between :date_reserved \
+                and :date_end \
+     \
+                or (date_reserved <= :date_reserved and \
+                date_end >= :date_end)) \
+            ) \
+            UNION ALL SELECT date_reserved, date_end from \"users\" natural join \"userbusy\" where (" + conditional_statement + ") and \
+                (date_reserved between :date_reserved \
+                and :date_end \
+                or date_end between :date_reserved \
+                and :date_end \
+                or (date_reserved <= :date_reserved and \
+                date_end >= :date_end))"
+
+            sql = text(query)
+
+            return db.engine.execute(sql, {'date_reserved': rid['date_reserved'],
+                                           'date_end': rid['date_end']})
+        except Exception as error:
+            print(error)
+            return "Could not do query"
+
+    @staticmethod
     def createMeeting(rid):
         try:
             user_ids = []
+
             for email in rid['members']:
                 request = {
                     "email": email
@@ -122,7 +174,14 @@ class Appointments(db.Model):
                 userID = response[0].json['user'][0]['user_id']
                 user_ids.append(int(userID))
 
-            sql = text("Insert into appointments(date_reserved, owner_id, room_id, date_end, rank_id, status_id, members, total_members) values (:date_reserved, :uid, :td, :date_end, :rank_id, :status_id, :members, :total_members)")
+            result = Appointments.getOverlappingTimestamps(user_ids, rid)
+
+            if(len(result[0].json['appoints']) > 0):
+                print(result[0].json['appoints'])
+                return "Timeframe Conflicts With Selected Users Schedule"
+
+            sql = text(
+                "Insert into appointments(date_reserved, owner_id, room_id, date_end, rank_id, status_id, members, total_members) values (:date_reserved, :uid, :td, :date_end, :rank_id, :status_id, :members, :total_members)")
             db.engine.execute(sql, {'members': rid['members'],
                                     'td': int(rid['room_id']),
                                     'date_reserved': rid['date_reserved'],

@@ -18,10 +18,12 @@ import Select from 'react-select'
 //         allDay?: boolean
 //     resource?: any,
 // }
- 
+
 
 let elements = [];
 function BookMeeting(){
+
+
 
     const navigate = useNavigate();
     if(window.login != true || window.login == undefined){
@@ -32,11 +34,7 @@ function BookMeeting(){
     const [dates, setDates] = useState([]);
     const [open, setOpen] = useState(false);
     const localizer = momentLocalizer(moment);
-
-
     const [values, setValues] = useState(initialstate);
-
-
 
     const handleChange = e => {
         const { name, value } = e.target;
@@ -45,7 +43,6 @@ function BookMeeting(){
           [name]: value
         });
       };
-
 
     function createElements(){
         let i = 0;
@@ -312,6 +309,8 @@ function BookMeeting(){
                                 type='text'
                                 onChange = {handleChange}
                 />
+
+
                 <h5>*If Leave Blank It Will Assume Your Alone On The Meeting*</h5>
                 <br/>
                 <Button className='appointment-btn' content='Create Booking' primary onClick={create_appointment}/>
