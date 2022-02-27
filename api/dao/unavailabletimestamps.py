@@ -1,7 +1,7 @@
 from api.util.config import db
 from sqlalchemy import text
 
-from backend.api.handler.users import UsersHandler
+from api.handler.users import UsersHandler
 
 
 class UnavailableTimestamps(db.Model):

@@ -8,9 +8,9 @@ import datetime
 from sqlalchemy.dialects.postgresql import JSONB, ARRAY
 from api.dao.room import Room
 
-from backend.api.dao.users import Users
-from backend.api.handler.users import UsersHandler
-from backend.api.util.utilities import Utilities
+from api.dao.users import Users
+from api.handler.users import UsersHandler
+from api.util.utilities import Utilities
 
 
 class Appointments(db.Model):
@@ -89,7 +89,7 @@ class Appointments(db.Model):
     @staticmethod
     def getAvailableRoomByTimeframe(tid):
         sql = text(
-            "Select Distinct on (room_id) room.room_id, room.name From room Where room.room_id not in (Select room_id from unavailabletimestamps) Limit 10")
+            "Select Distinct on (room_id) room.room_id, room.name From room Where room.room_id not in (Select room_id from unavailabletimestamps Where :td < date_reserved AND :td2 > date_end)")
         try:
             return db.engine.execute(sql, {'td': tid['timeframe1'],
                                            'td2': tid['timeframe_end']})
