@@ -95,9 +95,6 @@ function Schedule(){
 
     useEffect(() => {membersList = getMembersList(); }, [values.members])
 
-    function intersection(arr1, arr2) {
-      return arr1.filter(elem => !(arr2.includes(elem)));
-    }
     async function getSchedule(){
         var axios = require('axios');
 
@@ -307,7 +304,32 @@ function Schedule(){
         });
     }
 
+    async function getRoomByID(){
+        var axios = require('axios');
 
+        var data = JSON.stringify(values);
+
+        var config = {
+          method: 'POST',
+          url: 'http://127.0.0.1:5000/rooms/room-by-id',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+            if (response.data['Room'] != []){
+                values.room_name = response.data['Room'][0]['name'];
+                return;
+            }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+    }
 
     async function deleteUserBusy(){
         var axios = require('axios');
@@ -384,6 +406,7 @@ function Schedule(){
             values.date_reserved = event.start;
             values.date_end = event.end;
             values.room_id = event.room_id
+            await getRoomByID();
             await getMeetingInfo();
         }
 
@@ -499,6 +522,17 @@ function Schedule(){
                                 placeholder='end_date'
                                 type='text'
                                 defaultValue={getDate(values.date_end)}
+                                onChange = {handleChange}
+                                readOnly = 'readonly'
+                />
+                <Form.Input
+                                id = 'room_name'
+                                icon='lock'
+                                iconPosition='left'
+                                label='Room'
+                                placeholder='Room'
+                                type='text'
+                                defaultValue={values.room_name}
                                 onChange = {handleChange}
                                 readOnly = 'readonly'
                 />

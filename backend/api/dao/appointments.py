@@ -89,7 +89,7 @@ class Appointments(db.Model):
     @staticmethod
     def getAvailableRoomByTimeframe(tid):
         sql = text(
-            "Select Distinct on (room_id) room.room_id, room.name From room Where room.room_id not in (Select room_id from unavailabletimestamps Where :td < date_reserved AND :td2 > date_end)")
+            "Select Distinct on (room_id) room.room_id, room.name From room Where room.room_id not in (Select Distinct room_id from unavailabletimestamps Where :td >= date_reserved AND :td2 <= date_end)")
         try:
             return db.engine.execute(sql, {'td': tid['timeframe1'],
                                            'td2': tid['timeframe_end']})
@@ -172,6 +172,9 @@ class Appointments(db.Model):
                     "email": email
                 }
                 response = UsersHandler.getUserByEmail(request)
+                print(response[0].json)
+                if not response[0].json['user']:
+                    return 'User With Email: ' + email + ' Does Not Exists In Our System'
                 userID = response[0].json['user'][0]['user_id']
                 user_ids.append(int(userID))
 

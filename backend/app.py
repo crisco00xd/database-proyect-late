@@ -69,17 +69,9 @@ def getDepartmentById(did):
     return DepartmentsHandler.getDepartmentById(did)
 
 
-@app.route('/rooms/<int:pid>', methods=['GET', 'PUT', 'DELETE'])
-def getRoomByIdOrUpdate(pid):
-    if request.method == 'GET':
-        return RoomHandler.getRoomById(pid)
-    elif request.method == 'DELETE':
-        return RoomHandler.deleteRoom(pid)
-    else:
-        if len(request.json) == 1:
-            return RoomHandler.updateStock(pid, request.json)
-        else:
-            return RoomHandler.updateRoom(pid, request.json)
+@app.route('/rooms/room-by-id', methods=['POST'])
+def getRoomById():
+    return RoomHandler.getRoomById(request.json)
 
 
 @app.route('/rooms/dept/<int:did>', methods=['GET'])

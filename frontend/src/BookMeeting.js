@@ -152,6 +152,10 @@ function BookMeeting(){
               alert("Created Meeting Successfully")
               setOpen(false)
           }
+          else{
+              alert(response.data["Appointment"])
+              return;
+          }
 
 
         })
