@@ -45,14 +45,28 @@ function BookMeeting(){
         if(values.email == ''){
             values.email = window.user_info['email']
         }
+        else{
+            window.user_info['email'] = values.email
+        }
         if(values.first_name == ''){
             values.first_name = window.user_info['first_name']
         }
+        else{
+            window.user_info['first_name'] = values.first_name
+        }
+
         if(values.last_name == ''){
             values.last_name = window.user_info['last_name']
         }
+        else{
+            window.user_info['last_name'] = values.last_name
+        }
+
         if(values.password == ''){
             values.password = window.user_info['password']
+        }
+        else{
+            window.user_info['password'] = values.password
         }
 
         var data = JSON.stringify(values);
@@ -125,6 +139,7 @@ function BookMeeting(){
                                 label='First Name'
                                 placeholder='first_name'
                                 type='text'
+                                defaultValue = {window.user_info['first_name']}
                                 onChange = {handleChange}
                 />
 
@@ -135,6 +150,7 @@ function BookMeeting(){
                                 label='Last Name'
                                 placeholder='last_name'
                                 type='text'
+                                defaultValue = {window.user_info['last_name']}
                                 onChange = {handleChange}
                 />
 
@@ -145,6 +161,7 @@ function BookMeeting(){
                                 label='Email'
                                 placeholder='email'
                                 type='text'
+                                defaultValue = {window.user_info['email']}
                                 onChange = {handleChange}
                 />
 
@@ -154,11 +171,11 @@ function BookMeeting(){
                                 iconPosition='left'
                                 label='Password'
                                 placeholder='password'
-                                type='text'
+                                type='password'
+                                defaultValue = {window.user_info['password']}
                                 onChange = {handleChange}
                 />
                 <Button className='appointment-btn' content='Update Account Details' primary onClick={updateUser}/>
-                <h5>*Leave Blank For No Change*</h5>
             </Form>
             </Modal.Content>
             <Modal.Actions>

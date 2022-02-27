@@ -1,6 +1,6 @@
 from flask import jsonify, session
-from backend.api.dao.users import Users
-from backend.api.util.utilities import Utilities
+from api.dao.users import Users
+from api.util.utilities import Utilities
 
 
 class UsersHandler:

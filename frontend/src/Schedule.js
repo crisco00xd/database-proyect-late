@@ -48,7 +48,7 @@ function Schedule(){
         deleted_members: []
     });
 
-    const [checked, setChecked] = useState([0])
+    const [checked, setChecked] = useState([])
 
 
 
@@ -257,7 +257,6 @@ function Schedule(){
         .then(function (response) {
             if (response.data['room'] == 'Success Updating Meeting'){
                 alert("Updated Meeting Successfully");
-                setOpen(false);
                 setRefresh(!(refresh));
             }else{
                 alert('Could Not Modify');
@@ -516,6 +515,10 @@ function Schedule(){
                         <br></br>
                 <Button className='appointment-btn' content='Delete Selected Members' primary onClick={
                     () => {
+                            if(checked.length == 0){
+                                alert('None Selected');
+                                return
+                            }
                             for(let i = 0; i < checked.length; i++){
                                 const currentIndex = values.members.indexOf(checked[i]);
 

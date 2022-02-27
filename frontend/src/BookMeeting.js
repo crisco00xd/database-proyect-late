@@ -61,7 +61,6 @@ function BookMeeting(){
             let current_info = dates.pop()
 
             if(document.getElementById('members').value != ""){
-                alert('Creating meeting with peers');
                 create_appointment_members();
                 return;
             }
@@ -123,6 +122,9 @@ function BookMeeting(){
             window.values1 = values
 
 
+        for(let i = 0; i < values.members.length; i++){
+            values.members[i] = values.members[i].replace(/ /g,'');
+        }
 
 
         var data = JSON.stringify(values);
