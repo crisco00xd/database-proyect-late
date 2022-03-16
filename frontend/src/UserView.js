@@ -18,6 +18,11 @@ function UserView(){
     const [isAuth, setIsAuth] = useState(false)
     let panes = [];
 
+    function logout(){
+        window.login = false
+        console.log("NOT LOGGED IN")
+        navigate('/home');
+    }
     useEffect(() => {
       if(window.user_info == undefined) {
           navigate('/home')
@@ -50,6 +55,9 @@ function UserView(){
             },
             {
                 menuItem: 'Account Settings', render: () => <UserSettings/>
+            },
+            {
+                menuItem: 'LOGOUT', render: () => {logout()}
             }
         ]
     }
@@ -66,6 +74,9 @@ function UserView(){
             },
             {
                 menuItem: 'Account Settings', render: () => <UserSettings/>
+            },
+            {
+                menuItem: 'LOGOUT', render: () => {logout()}
             }
         ]
     }
