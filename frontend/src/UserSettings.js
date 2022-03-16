@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import {Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
@@ -18,6 +18,7 @@ function BookMeeting(){
     const [dates, setDates] = useState([]);
     const [open1, setOpen1] = useState(false);
     const [open2, setOpen2] = useState(false);
+    const [refresh, setRefresh] = useState([]);
     const localizer = momentLocalizer(moment)
 
     const handleChange = e => {
@@ -38,6 +39,7 @@ function BookMeeting(){
         values.first_name = document.getElementById('first_name').value
         values.last_name = document.getElementById('last_name').value
         values.email = document.getElementById('email').value
+        values.email1 = window.user_info['email']
         values.password = document.getElementById('password').value
         values.rank_id = window.user_info['rank_id']
         values.user_id = window.user_info['user_id']
@@ -45,9 +47,7 @@ function BookMeeting(){
         if(values.email == ''){
             values.email = window.user_info['email']
         }
-        else{
-            window.user_info['email'] = values.email
-        }
+
         if(values.first_name == ''){
             values.first_name = window.user_info['first_name']
         }
@@ -84,13 +84,18 @@ function BookMeeting(){
         .then(function (response) {
           if(response.data['response'] == "Successfully Edited User"){
                 alert("Successfully Edited User Info");
+                window.user_info['email'] = values.email
                 setOpen1(false);
+          }else{
+              alert(response.data['response']);
           }
         })
         .catch(function (error) {
           console.log(error);
         });
     }
+    useEffect(() => {}, [open1])
+
     const deleteUser = (e) => {
         var axios = require('axios');
 

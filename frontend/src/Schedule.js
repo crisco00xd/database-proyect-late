@@ -227,6 +227,32 @@ function Schedule(){
 
     }
 
+    async function getOwner(){
+        var axios = require('axios');
+
+        var data = JSON.stringify(values);
+
+        var config = {
+          method: 'POST',
+          url: 'http://127.0.0.1:5000/Appointments/get-meeting',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+            if (response.data['Appointments'] != []){
+                values.owner_id = response.data['Appointments'][0]['owner_id']
+                console.log(values.owner_id);
+                return;
+            }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
     async function updateMeeting(){
         var axios = require('axios');
 
@@ -267,6 +293,11 @@ function Schedule(){
 
 
     async function deleteMeeting(){
+        if(window.user_info['user_id'] != values.owner_id){
+            alert('Cannot Delete Meeting Because You Are Not The Owner')
+            return
+        }
+
         var axios = require('axios');
 
         values.owner_id = window.user_info['user_id']
@@ -275,7 +306,7 @@ function Schedule(){
         values.comment = document.getElementById('comment').value;
         values.date_end = new Date(document.getElementById('date_end').value);
         values.members = values.members;
-        values.total_members = values.members.length
+        values.total_members = values.members.length;
 
         console.log(values)
         var data = JSON.stringify(values);
@@ -407,6 +438,7 @@ function Schedule(){
             values.date_end = event.end;
             values.room_id = event.room_id
             await getRoomByID();
+            await getOwner();
             await getMeetingInfo();
         }
 

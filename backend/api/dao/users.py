@@ -82,6 +82,13 @@ class Users(db.Model):
     # update user
     @staticmethod
     def updateUser(user):
+        if user['email'] != user['email1']:
+            from backend.api.handler.users import UsersHandler
+            response = UsersHandler.getUserByEmail(user)
+            print(response[0].json)
+            if response[0].json['user']:
+                return 'A User With Email: ' + user['email'] + ' Exists In Our System'
+
         sql = text("UPDATE users\
             SET \
             first_name = :first_name \
