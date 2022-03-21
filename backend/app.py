@@ -211,6 +211,16 @@ def getBusyRoom():
     return UnavailableTimestampsHandler.findMostBookedRoom(request.json)
 
 
+@app.route('/statistics/user-most-booked-user', methods=['POST'])
+def getMostBookedUser():
+    return UnavailableTimestampsHandler.UserMostBookedUser(request.json)
+
+
+@app.route('/statistics/most-booked-room-by-user', methods=['POST'])
+def getMostBookedRoomByUser():
+    return UnavailableTimestampsHandler.MostBookedRoomByUser(request.json)
+
+
 @app.route('/userbusy/create-user-busy', methods=['POST'])
 def createUserBusy():
     return UserBusyHandler.createUserBusy(request.json)

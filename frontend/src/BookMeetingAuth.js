@@ -57,7 +57,7 @@ function BookMeeting(){
       };
 
     const [values, setValues] = useState(initialstate);
-//FINISH ROOM BUSY AND MEETING WITH PEERS
+
     const timeBusy = (e) => {
         var axios = require('axios');
         let current_info = dates.pop()
@@ -71,9 +71,9 @@ function BookMeeting(){
             values.date_end = current_info['end']
         }
             values.user_id = window.user_info['user_id']
-            values.room_id = document.getElementById('room_id').value
+            values.room_name = document.getElementById('room_name').value
             values.rank_id = window.user_info['rank_id']
-            values.comment = 'To test'
+            values.comment = 'MARKED BUSY BY THIS USER'
 
 
         var data = JSON.stringify(values);
@@ -679,11 +679,11 @@ function BookMeeting(){
             <Modal.Content>
             <Form>
                 <Form.Input
-                                id = 'room_id'
+                                id = 'room_name'
                                 icon='lock'
                                 iconPosition='left'
                                 label='Room ID'
-                                placeholder='room_id'
+                                placeholder='room_name'
                                 type='text'
                                 onChange = {handleChange}
                 />

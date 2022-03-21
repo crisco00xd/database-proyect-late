@@ -11,6 +11,7 @@ function BookMeeting(){
     const [refresh, doRefresh] = useState([]);
     const [data, setData] = useState([]);
     let count = 0;
+    const [values, setValues] = useState({});
     const findMostUsedRoom = (e) => {
         var axios = require('axios');
 
@@ -23,7 +24,7 @@ function BookMeeting(){
         };
         axios(config)
         .then(function (response) {
-            setData([{"name": 'Room ' + response.data['Available'][0]['room_id'], "Counts": response.data['Available'][0]['count']}]);
+            setData([{"name": 'Room: ' + response.data['Available'][0]['name'], "Counts": response.data['Available'][0]['count']}]);
             return
         })
         .catch(function (error) {
@@ -43,12 +44,13 @@ function BookMeeting(){
         };
         axios(config)
         .then(function (response) {
-            setData([{"name": response.data['Available'][0]['most_appointed_starting_time'] + ' - ' + response.data['Available'][0]['most_appointed_ending_time'], "Counts": response.data['Available'][0]['amount_of_appointments']},
-            {"name": response.data['Available'][1]['most_appointed_starting_time'] + ' - ' + response.data['Available'][1]['most_appointed_ending_time'], "Counts": response.data['Available'][1]['amount_of_appointments']},
-            {"name": response.data['Available'][2]['most_appointed_starting_time'] + ' - ' + response.data['Available'][2]['most_appointed_ending_time'], "Counts": response.data['Available'][2]['amount_of_appointments']},
-            {"name": response.data['Available'][3]['most_appointed_starting_time'] + ' - ' + response.data['Available'][3]['most_appointed_ending_time'], "Counts": response.data['Available'][3]['amount_of_appointments']},
-            {"name": response.data['Available'][4]['most_appointed_starting_time'] + ' - ' + response.data['Available'][4]['most_appointed_ending_time'], "Counts": response.data['Available'][4]['amount_of_appointments']}]);
-            return
+            let i = 0;
+            doRefresh([]);
+            while(response.data['Available'][i]){
+                refresh.push({"name": response.data['Available'][i]['most_appointed_starting_time'] + ' - ' + response.data['Available'][i]['most_appointed_ending_time'], "Counts": response.data['Available'][i]['amount_of_appointments']});
+                i+=1;
+            }
+            setData(refresh);
         })
         .catch(function (error) {
           console.log(error);
@@ -71,7 +73,7 @@ function BookMeeting(){
             let i = 0;
             doRefresh([]);
             while(response.data['Available'][i]){
-                refresh.push({"name": 'User ' + response.data['Available'][i]['user_id'], "Counts": response.data['Available'][i]['count']});
+                refresh.push({"name": response.data['Available'][i]['first_name'] + ' ' + response.data['Available'][i]['last_name'], "Counts": response.data['Available'][i]['count']});
                 i+=1;
             }
             setData(refresh);
@@ -97,7 +99,65 @@ function BookMeeting(){
             let i = 0;
             doRefresh([]);
             while(response.data['Available'][i]){
-                refresh.push({"name": 'Room ' + response.data['Available'][i]['room_id'], "Counts": response.data['Available'][i]['count']});
+                refresh.push({"name": 'Room: ' + response.data['Available'][i]['name'], "Counts": response.data['Available'][i]['count']});
+                i+=1;
+            }
+            setData(refresh);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+    }
+
+    const UserMostBookedUser = (e) => {
+        var axios = require('axios');
+
+        values.user_id = window.user_info['user_id']
+        var data = JSON.stringify(values);
+        var config = {
+          method: 'post',
+          url: 'http://127.0.0.1:5000/statistics/user-most-booked-user',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+        axios(config)
+        .then(function (response) {
+            let i = 0;
+            doRefresh([]);
+            while(response.data['result'][i]){
+                refresh.push({"name": response.data['result'][0]['first_name'] + ' ' + response.data['result'][0]['last_name'], "Counts": response.data['result'][0]['user_count']});
+                i+=1;
+            }
+            setData(refresh);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+    }
+
+    const MostBookedRoomByUser = (e) => {
+        var axios = require('axios');
+
+        values.user_id = window.user_info['user_id']
+        var data = JSON.stringify(values);
+        var config = {
+          method: 'post',
+          url: 'http://127.0.0.1:5000/statistics/most-booked-room-by-user',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+        axios(config)
+        .then(function (response) {
+            let i = 0;
+            doRefresh([]);
+            while(response.data['result'][i]){
+                refresh.push({"name": "Room: " + response.data['result'][0]['name'], "Counts": response.data['result'][0]['count']});
                 i+=1;
             }
             setData(refresh);
@@ -110,7 +170,7 @@ function BookMeeting(){
 
     return <Container style={{ height: 800 }}>
         <center>
-            <br/><h1> GLOBAL STATISTICS </h1>
+            <br/><h1> STATISTICS </h1>
         <br/>
         <BarChart width={730} height={250} data={data}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -120,6 +180,7 @@ function BookMeeting(){
             <Legend />
             <Bar dataKey="Counts" fill="#8884d8" />
         </BarChart>
+            <br/><h1> GLOBAL STATISTICS </h1>
         <Button
             fluid
             onClick={findMostUsedRoom}
@@ -136,6 +197,15 @@ function BookMeeting(){
             fluid
             onClick={findMostBookedRooms}
             > Find Most Booked Rooms</Button>
+            <br/><h1> USER STATISTICS </h1>
+            <Button
+            fluid
+            onClick={UserMostBookedUser}
+            > User Most Booked User</Button>
+            <Button
+            fluid
+            onClick={MostBookedRoomByUser}
+            > Most Booked Room By User</Button>
         </center>
     </Container>
 

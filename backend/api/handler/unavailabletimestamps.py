@@ -151,3 +151,41 @@ class UnavailableTimestampsHandler:
             return jsonify(result), 200
         except Exception as e:
             return jsonify(reason="Server error", error=e.__str__()), 500
+
+
+    @staticmethod
+    def UserMostBookedUser(sid):
+        try:
+            unavailabletimestamp = UnavailableTimestamps.UserMostBookedUser(sid)
+            d, a = {}, []
+            for rowproxy in unavailabletimestamp:
+                for column, value in rowproxy.items():
+                    # build up the dictionary
+                    d = {**d, **{column: value}}
+                a.append(d)
+            result = {
+                "result": a
+            }
+            return jsonify(result), 200
+        except Exception as e:
+            return jsonify(reason="Server error", error=e.__str__()), 500
+
+
+
+
+    @staticmethod
+    def MostBookedRoomByUser(sid):
+        try:
+            unavailabletimestamp = UnavailableTimestamps.MostBookedRoomByUser(sid)
+            d, a = {}, []
+            for rowproxy in unavailabletimestamp:
+                for column, value in rowproxy.items():
+                    # build up the dictionary
+                    d = {**d, **{column: value}}
+                a.append(d)
+            result = {
+                "result": a
+            }
+            return jsonify(result), 200
+        except Exception as e:
+            return jsonify(reason="Server error", error=e.__str__()), 500

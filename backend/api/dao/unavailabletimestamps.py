@@ -3,6 +3,8 @@ from sqlalchemy import text
 
 from api.handler.users import UsersHandler
 
+from backend.api.handler.room import RoomHandler
+
 
 class UnavailableTimestamps(db.Model):
     __tablename__ = 'unavailabletimestamps'
@@ -69,12 +71,17 @@ class UnavailableTimestamps(db.Model):
             if int(rid['rank_id']) == 1 or int(rid['rank_id']) == 2:
                 return "UR NOT AUTHORIZED TO DO THIS"
 
+            request = {
+                "room_name": rid['room_name']
+            }
+            response = RoomHandler.getroomByName(request)
+            room_id = response[0].json['Room'][0]['room_id']
             sql = text(
                 "Insert into unavailabletimestamps(user_id, room_id, date_reserved, date_end, comment) values (:user_id, :room_id, :date_reserved, :date_end, :comment)")
 
             db.engine.execute(sql, {
                 "user_id": rid["user_id"],
-                "room_id": rid["room_id"],
+                "room_id": room_id,
                 "date_reserved": rid["date_reserved"],
                 "date_end": rid["date_end"],
                 "comment": rid["comment"]
@@ -128,7 +135,7 @@ class UnavailableTimestamps(db.Model):
     def findMostBookedUsers(rid):
         try:
             sql = text(
-                "select user_id, count(*) as count from unavailabletimestamps group by user_id order by count desc limit 10;")
+                "select first_name, last_name, count(*) as count from unavailabletimestamps natural inner join users group by first_name, last_name order by count desc limit 10;")
             return db.engine.execute(sql)
         except Exception as error:
             print(error)
@@ -138,7 +145,7 @@ class UnavailableTimestamps(db.Model):
     def findMostBookedRoom(rid):
         try:
             sql = text(
-                "select room_id, count(*) as count from appointments group by room_id order by count desc limit 10")
+                "select name, count(*) as count from unavailabletimestamps natural inner join room group by name order by count desc limit 10")
             return db.engine.execute(sql)
         except Exception as error:
             print(error)
@@ -148,8 +155,32 @@ class UnavailableTimestamps(db.Model):
     def findMostUsedRoom(rid):
         try:
             sql = text(
-                "select room_id, count(*) as count from appointments group by room_id order by count desc limit 1")
+                "select name, count(*) as count from appointments natural inner join room group by name order by count desc limit 1")
             return db.engine.execute(sql)
+        except Exception as error:
+            print(error)
+            return error
+
+    @staticmethod
+    def UserMostBookedUser(rid):
+        try:
+            sql = text(
+                "with meeting as (select unavailabletimestamps.room_id, unavailabletimestamps.date_reserved, unavailabletimestamps.date_end from unavailabletimestamps where unavailabletimestamps.user_id = :uid), invitees as (select unavailabletimestamps.user_id, unavailabletimestamps.room_id, unavailabletimestamps.date_reserved, unavailabletimestamps.date_end  from unavailabletimestamps, meeting where unavailabletimestamps.room_id = meeting.room_id and unavailabletimestamps.date_reserved = meeting.date_reserved and unavailabletimestamps.date_end = meeting.date_end) select user_id, first_name, last_name, email, count(*) as user_count from users natural join invitees where users.user_id in (select invitees.user_id from invitees) and user_id != :uid group by user_id, first_name, last_name, email order by user_count desc limit 1")
+            return db.engine.execute(sql, {
+                "uid": rid['user_id']
+            })
+        except Exception as error:
+            print(error)
+            return error
+
+    @staticmethod
+    def MostBookedRoomByUser(rid):
+        try:
+            sql = text(
+                "select name, count(*) as count from unavailabletimestamps natural inner join room where user_id = :uid group by name order by count desc limit 1")
+            return db.engine.execute(sql, {
+                "uid": rid['user_id']
+            })
         except Exception as error:
             print(error)
             return error
