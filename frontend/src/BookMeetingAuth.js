@@ -30,7 +30,8 @@ function BookMeeting(){
     }
     const initialstate = {
         "roomdata" : [],
-        "user_info": []
+        "user_info": [],
+        "user_result": []
     }
     const [dates, setDates] = useState([]);
     const [open, setOpen] = useState(false);
@@ -46,6 +47,7 @@ function BookMeeting(){
     const [open10, setOpen10] = useState(false);
     const [open11, setOpen11] = useState(false);
     const [open12, setOpen12] = useState(false);
+    const [open13, setOpen13] = useState(false);
     const localizer = momentLocalizer(moment)
 
     const handleChange = e => {
@@ -149,15 +151,169 @@ function BookMeeting(){
 
     }
 
+
+    const searchUser = (e) => {
+        var axios = require('axios');
+
+        values.email = document.getElementById('email1').value
+
+        if(values.email == ''){
+            alert('No Blank Spaces Please')
+            return;
+        }
+
+
+        values.email1 = values.email
+
+
+
+        var data = JSON.stringify(values);
+
+        var config = {
+          method: 'post',
+          url: 'http://localhost:5000/user/get-user-by-email',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+          if(response.data['user'].length > 0){
+              values.user_result = response.data['user'][0]
+              console.log(values.user_result)
+                setOpen1(false);
+                setOpen13(true);
+          }
+          else{
+              alert('No User Found With That Email');
+              return;
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+
+    const searchUserByEmail = (e) => {
+        var axios = require('axios');
+
+        values.email = document.getElementById('email2').value
+
+        if(values.email == ''){
+            alert('No Blank Spaces Please')
+            return;
+        }
+
+
+        values.email1 = values.email
+
+
+
+        var data = JSON.stringify(values);
+
+        var config = {
+          method: 'post',
+          url: 'http://localhost:5000/user/get-user-by-email',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+          if(response.data['user'].length > 0){
+              values.user_id = response.data['user'][0]['user_id'];
+              readUser();
+          }
+          else{
+              alert('No User Found With That Email');
+              return;
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+
+    const searchUserForScheduleByEmail = (e) => {
+        var axios = require('axios');
+
+        values.email = document.getElementById('email3').value
+
+        if(values.email == ''){
+            alert('No Blank Spaces Please')
+            return;
+        }
+
+
+        values.email1 = values.email
+
+
+
+        var data = JSON.stringify(values);
+
+        var config = {
+          method: 'post',
+          url: 'http://localhost:5000/user/get-user-by-email',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+          if(response.data['user'].length > 0){
+              values.user_id = response.data['user'][0]['user_id'];
+              getUserSchedule();
+          }
+          else{
+              alert('No User Found With That Email');
+              return;
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
+
+
     const updateUser = (e) => {
         var axios = require('axios');
 
         values.first_name = document.getElementById('first_name').value
         values.last_name = document.getElementById('last_name').value
-        values.email = document.getElementById('email').value
+        values.email = document.getElementById('email1').value
         values.password = document.getElementById('password').value
-        values.rank_id = document.getElementById('rank_id').value
-        values.user_id = document.getElementById('user_id').value
+        values.rank_id = window.user_info['rank_id']
+        values.user_id = window.user_info['user_id']
+
+        if(values.email == ''){
+            alert("Please No Blank Spaces");
+            return;
+        }
+
+        if(values.first_name == ''){
+            alert("Please No Blank Spaces");
+            return;
+        }
+
+
+        if(values.last_name == ''){
+            alert("Please No Blank Spaces");
+            return;
+        }
+
+
+        if(values.password == ''){
+            alert("Please No Blank Spaces");
+            return;
+        }
 
 
         var data = JSON.stringify(values);
@@ -175,7 +331,10 @@ function BookMeeting(){
         .then(function (response) {
           if(response.data['response'] == "Successfully Edited User"){
                 alert("Successfully Edited User Info");
-                setOpen1(false);
+                window.user_info['email'] = values.email
+                setOpen13(false);
+          }else{
+              alert(response.data['response']);
           }
         })
         .catch(function (error) {
@@ -250,7 +409,6 @@ function BookMeeting(){
     const readUser = (e) => {
         var axios = require('axios');
 
-        values.user_id = document.getElementById('user_id1').value
         var data = JSON.stringify(values);
 
         console.log(data)
@@ -442,10 +600,52 @@ function BookMeeting(){
 
     }
 
-    const getUserSchedule = (e) => {
+
+
+    const getUserInfoById = (e) => {
         var axios = require('axios');
 
         values.user_id = document.getElementById('user_id2').value;
+
+        var data = JSON.stringify(values);
+        console.log(data)
+
+        var config = {
+          method: 'post',
+          url: 'http://localhost:5000/user-schedule',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+        axios(config)
+        .then(function (response) {
+          if(response.data['Appointments']){
+              window.roomdata = response.data['Appointments']
+              console.log(window.roomdata)
+              if(Object.keys(window.roomdata).length == 0) {
+                  alert("This User Has No Schedule");
+              }else{
+                  values.roomdata = window.roomdata
+                  setOpen10(false);
+                  setOpen11(true);
+              }
+
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+
+    }
+
+
+
+
+
+
+    const getUserSchedule = (e) => {
+        var axios = require('axios');
 
         var data = JSON.stringify(values);
         console.log(data)
@@ -594,9 +794,49 @@ function BookMeeting(){
             onClose={() => setOpen1(false)}
             onOpen={() => setOpen1(true)}
         >
+            <Modal.Header>Enter User's Email To Modify</Modal.Header>
+            <Modal.Content>
+            <Form>
+
+                <Form.Input
+                                id = 'email1'
+                                icon='lock'
+                                iconPosition='left'
+                                label='Email'
+                                placeholder='email'
+                                type='text'
+                                onChange = {handleChange}
+                />
+
+                <Button className='appointment-btn' content='Search User' primary onClick={searchUser}/>
+            </Form>
+            </Modal.Content>
+            <Modal.Actions>
+                <Button onClick={() => setOpen1(false)}>Cancel</Button>
+            </Modal.Actions>
+        </Modal>
+
+
+        <Modal
+            centered={false}
+            open={open13}
+            onClose={() => setOpen13(false)}
+            onOpen={() => setOpen13(true)}
+        >
             <Modal.Header>Modify User Information</Modal.Header>
             <Modal.Content>
             <Form>
+
+                <Form.Input
+                                id = 'email1'
+                                icon='lock'
+                                iconPosition='left'
+                                label='Email'
+                                placeholder='email'
+                                type='text'
+                                defaultValue={values.user_result['email']}
+                                onChange = {handleChange}
+                />
                 <Form.Input
                                 id = 'first_name'
                                 icon='lock'
@@ -604,7 +844,7 @@ function BookMeeting(){
                                 label='First Name'
                                 placeholder='first_name'
                                 type='text'
-                                value={window.user_info['first_name']}
+                                defaultValue = {values.user_result['first_name']}
                                 onChange = {handleChange}
                 />
 
@@ -615,18 +855,7 @@ function BookMeeting(){
                                 label='Last Name'
                                 placeholder='last_name'
                                 type='text'
-                                value={window.user_info['last_name']}
-                                onChange = {handleChange}
-                />
-
-                <Form.Input
-                                id = 'email'
-                                icon='lock'
-                                iconPosition='left'
-                                label='Email'
-                                placeholder='email'
-                                type='text'
-                                value={window.user_info['email']}
+                                defaultValue = {values.user_result['last_name']}
                                 onChange = {handleChange}
                 />
 
@@ -636,39 +865,23 @@ function BookMeeting(){
                                 iconPosition='left'
                                 label='Password'
                                 placeholder='password'
-                                type='text'
-                                value={window.user_info['password']}
+                                type='password'
+                                defaultValue = {values.user_result['password']}
                                 onChange = {handleChange}
                 />
 
-                <Form.Input
-                                id = 'rank_id'
-                                icon='lock'
-                                iconPosition='left'
-                                label='Rank Id'
-                                placeholder='rank_id'
-                                type='text'
-                                value={window.user_info['rank_id']}
-                                onChange = {handleChange}
-                />
-
-                <Form.Input
-                                id = 'user_id'
-                                icon='lock'
-                                iconPosition='left'
-                                label='User Id'
-                                placeholder='user_id'
-                                type='text'
-                                value={window.user_info['user_id']}
-                                onChange = {handleChange}
-                />
                 <Button className='appointment-btn' content='Update User' primary onClick={updateUser}/>
             </Form>
             </Modal.Content>
             <Modal.Actions>
-                <Button onClick={() => setOpen1(false)}>Cancel</Button>
+                <Button onClick={() => setOpen13(false)}>Cancel</Button>
             </Modal.Actions>
         </Modal>
+
+
+
+
+
         <Modal
             centered={false}
             open={open2}
@@ -791,15 +1004,15 @@ function BookMeeting(){
             <Modal.Content>
             <Form>
                 <Form.Input
-                                id = 'user_id1'
+                                id = 'email2'
                                 icon='lock'
                                 iconPosition='left'
-                                label='User ID'
-                                placeholder='USER ID'
+                                label='Email'
+                                placeholder='Email'
                                 type='text'
                                 onChange = {handleChange}
                 />
-                <Button className='appointment-btn' content='Get User Info' primary onClick={readUser}/>
+                <Button className='appointment-btn' content='Get User Info' primary onClick={searchUserByEmail}/>
             </Form>
             </Modal.Content>
             <Modal.Actions>
@@ -872,15 +1085,15 @@ function BookMeeting(){
             <Modal.Content>
             <Form>
                 <Form.Input
-                                id = 'user_id2'
+                                id = 'email3'
                                 icon='lock'
                                 iconPosition='left'
                                 label='User ID'
-                                placeholder={window.user_info['user_id']}
+                                placeholder='Email'
                                 type='text'
                                 onChange = {handleChange}
                 />
-                <Button className='appointment-btn' content='Find Schedule' primary onClick={getUserSchedule}/>
+                <Button className='appointment-btn' content='Find Schedule' primary onClick={searchUserForScheduleByEmail}/>
             </Form>
             </Modal.Content>
             <Modal.Actions>
