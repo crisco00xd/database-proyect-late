@@ -69,6 +69,11 @@ def getDepartmentById(did):
     return DepartmentsHandler.getDepartmentById(did)
 
 
+@app.route('/rooms/room-by-name', methods=['POST'])
+def getRoomByName():
+    return RoomHandler.getroomByName(request.json)
+
+
 @app.route('/rooms/room-by-id', methods=['POST'])
 def getRoomById():
     return RoomHandler.getRoomById(request.json)

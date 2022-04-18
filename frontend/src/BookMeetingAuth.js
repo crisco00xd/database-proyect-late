@@ -342,17 +342,47 @@ function BookMeeting(){
         });
     }
 
+    const getRoomByName = (e) => {
+        var axios = require('axios');
+
+        values.room_name = document.getElementById('room_name5').value
+
+
+        var data = JSON.stringify(values);
+
+        var config = {
+          method: 'post',
+          url: 'http://localhost:5000/rooms/room-by-name',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          data : data
+        };
+
+        axios(config)
+        .then(function (response) {
+          if(response.data['Room'].length != 0){
+                alert("Room With That Name Already Exists");
+                return
+          }
+          else{
+              modifyRoom();
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+    }
 
     const modifyRoom = (e) => {
         var axios = require('axios');
 
         values.room_name = document.getElementById('room_name1').value
-        values.room_id = document.getElementById('room_id').value
+        values.new_name = document.getElementById('room_name5').value
+
+
         values.dept_id = 1
         values.stock = 1
-
-
-
 
 
         var data = JSON.stringify(values);
@@ -381,7 +411,7 @@ function BookMeeting(){
     const deleteRoom = (e) => {
         var axios = require('axios');
 
-        values.room_id = document.getElementById('room_id').value
+        values.room_name = document.getElementById('room_name4').value
 
         var data = JSON.stringify(values);
 
@@ -398,7 +428,7 @@ function BookMeeting(){
         .then(function (response) {
           if(response.data['message'] == "Success Deleting!"){
                 alert("Successfully Deleting Room!");
-                setOpen3(false);
+                setOpen5(false);
           }
         })
         .catch(function (error) {
@@ -520,7 +550,7 @@ function BookMeeting(){
     const getRoomSchedule = (e) => {
         var axios = require('axios');
 
-        values.room_id = document.getElementById('room_id2').value;
+        values.room_name = document.getElementById('room_name3').value;
 
         var data = JSON.stringify(values);
         console.log(data)
@@ -946,22 +976,22 @@ function BookMeeting(){
                                 id = 'room_name1'
                                 icon='lock'
                                 iconPosition='left'
-                                label='room_name'
-                                placeholder='room_name'
+                                label='Room To Edit'
+                                placeholder='Name'
                                 type='text'
                                 onChange = {handleChange}
                 />
 
                 <Form.Input
-                                id = 'room_id'
+                                id = 'room_name5'
                                 icon='lock'
                                 iconPosition='left'
-                                label='room_id'
-                                placeholder='room_id'
+                                label='New Room Name'
+                                placeholder='Name'
                                 type='text'
                                 onChange = {handleChange}
                 />
-                <Button className='appointment-btn' content='Update Room' primary onClick={modifyRoom}/>
+                <Button className='appointment-btn' content='Update Room' primary onClick={getRoomByName}/>
             </Form>
             </Modal.Content>
             <Modal.Actions>
@@ -978,11 +1008,11 @@ function BookMeeting(){
             <Modal.Content>
             <Form>
                 <Form.Input
-                                id = 'room_id'
+                                id = 'room_name4'
                                 icon='lock'
                                 iconPosition='left'
-                                label='room_id'
-                                placeholder='room_id'
+                                label='Room Name'
+                                placeholder='Name'
                                 type='text'
                                 onChange = {handleChange}
                 />
@@ -1045,11 +1075,11 @@ function BookMeeting(){
             <Modal.Content>
             <Form>
                 <Form.Input
-                                id = 'room_id2'
+                                id = 'room_name3'
                                 icon='lock'
                                 iconPosition='left'
-                                label='Room ID'
-                                placeholder='room_id'
+                                label='Room Name'
+                                placeholder='Name'
                                 type='text'
                                 onChange = {handleChange}
                 />

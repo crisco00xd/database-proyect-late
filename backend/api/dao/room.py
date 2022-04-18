@@ -74,9 +74,9 @@ class Room(db.Model):
 
     @staticmethod
     def delete(pid):
-        sql = text("DELETE FROM room WHERE room_id = :pid")
+        sql = text("DELETE FROM room WHERE name = :pid")
         try:
-            db.engine.execute(sql, {'pid': pid['room_id']})
+            db.engine.execute(sql, {'pid': pid['room_name']})
             return 'Success deleting room'
 
         except Exception as error:
@@ -97,11 +97,11 @@ class Room(db.Model):
 
     @staticmethod
     def updateRoom(pid):
-        sql = text("UPDATE room SET room_id = :rid, name = :rname, dept_id = :did, stock = :pid WHERE room_id = :rid")
+        sql = text("UPDATE room SET name = :new_name, dept_id = :did, stock = :pid WHERE name = :rname")
         try:
-            db.engine.execute(sql, {'rid': pid['room_id'],
-                                    'pid': pid['stock'],
+            db.engine.execute(sql, {'pid': pid['stock'],
                                     'rname': pid['room_name'],
+                                    'new_name': pid['new_name'],
                                     'did': pid['dept_id']})
             return 'Success updating room'
 
