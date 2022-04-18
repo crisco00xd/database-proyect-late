@@ -100,9 +100,9 @@ class Appointments(db.Model):
     @staticmethod
     def getRoomSchedule(tid):
         sql = text(
-            "Select room.room_id, room.name, appointments.date_reserved, appointments.date_end From appointments natural inner join room Where :td = appointments.room_id")
+            "Select room.room_id, room.name, appointments.date_reserved, appointments.date_end From appointments natural inner join room Where :td = room.name")
         try:
-            return db.engine.execute(sql, {'td': tid['room_id']})
+            return db.engine.execute(sql, {'td': tid['room_name']})
         except Exception as error:
             return error
 
