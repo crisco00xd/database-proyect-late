@@ -73,7 +73,7 @@ class Users(db.Model):
     @staticmethod
     def getUserSchedule(user):
         sql = text(
-            "Select first_name, last_name, unavailabletimestamps.date_reserved, unavailabletimestamps.date_end, unavailabletimestamps.comment, room_id From users natural inner join unavailabletimestamps Where :td = unavailabletimestamps.user_id")
+            "Select first_name, last_name, unavailabletimestamps.date_reserved, unavailabletimestamps.date_end, unavailabletimestamps.comment, room_id From users natural inner join unavailabletimestamps Where :td = unavailabletimestamps.user_id or unavailabletimestamps.user_id = 0")
         try:
             return db.engine.execute(sql, {"td": user["user_id"]})
         except:
@@ -83,7 +83,7 @@ class Users(db.Model):
     @staticmethod
     def updateUser(user):
         if user['email'] != user['email1']:
-            from backend.api.handler.users import UsersHandler
+            from api.handler.users import UsersHandler
             response = UsersHandler.getUserByEmail(user)
             print(response[0].json)
             if response[0].json['user']:

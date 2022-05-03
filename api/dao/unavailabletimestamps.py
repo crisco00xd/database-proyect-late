@@ -3,7 +3,9 @@ from sqlalchemy import text
 
 from api.handler.users import UsersHandler
 
-from backend.api.handler.room import RoomHandler
+from api.handler.room import RoomHandler
+
+from api.handler.appointments import AppointmentsHandler
 
 
 class UnavailableTimestamps(db.Model):
@@ -75,7 +77,26 @@ class UnavailableTimestamps(db.Model):
                 "room_name": rid['room_name']
             }
             response = RoomHandler.getroomByName(request)
+            if not response[0].json['Room']:
+                return 'Room Does Not Exists'
+
             room_id = response[0].json['Room'][0]['room_id']
+            request = {
+                "timeframe1": rid["date_reserved"],
+                "timeframe_end": rid["date_end"]
+            }
+            response1 = AppointmentsHandler.getAvailableRoomByTimeframe(request)
+            found = False
+            for i in range(len(response1[0].json['Appointments'])):
+                if response1[0].json['Appointments'][i]['name'] == rid['room_name']:
+                    found = True
+                    break
+                else:
+                    continue
+
+            if not found:
+                return 'Room Has Meeting Pending Cannot Put Unavailable'
+
             sql = text(
                 "Insert into unavailabletimestamps(user_id, room_id, date_reserved, date_end, comment) values (:user_id, :room_id, :date_reserved, :date_end, :comment)")
 
