@@ -137,6 +137,7 @@ function Schedule(){
                     'room_id': result.room_id
               })
           }
+            getUserBusy();
         })
         .catch(function (error) {
           console.log(error);
@@ -353,6 +354,7 @@ function Schedule(){
         .then(function (response) {
             if (response.data['Room'] != []){
                 values.room_name = response.data['Room'][0]['name'];
+                window.room_name = response.data['Room'][0]['name'];
                 return;
             }
         })
@@ -432,15 +434,22 @@ function Schedule(){
             values.date_reserved = event.start;
             values.date_end = event.end;
             setOpen1(true);
-        } else {
-            values.comment = event.title;
-            values.date_reserved = event.start;
-            values.date_end = event.end;
-            values.room_id = event.room_id
-            await getRoomByID();
-            await getOwner();
-            await getMeetingInfo();
         }
+        else if (event.title == 'Unavailable Room'){
+            values.room_id = event.room_id
+            getRoomByID();
+            alert('Room: ' + window.room_name + ' Is Currently Unavailable At This Timeframe');
+            }
+
+        else {
+                values.comment = event.title;
+                values.date_reserved = event.start;
+                values.date_end = event.end;
+                values.room_id = event.room_id
+                await getRoomByID();
+                await getOwner();
+                await getMeetingInfo();
+            }
 
     }
 
@@ -473,8 +482,6 @@ function Schedule(){
         async function getData() {
             await getSchedule();
             console.log("Loaded meetings");
-            await getUserBusy();
-            console.log("Loaded User busy");
         }
         getData();
     }, [refresh])
@@ -507,11 +514,15 @@ function Schedule(){
             display: 'block'
             };
 
-            if (event.title == 'To test') {
-              newStyle.backgroundColor = "blue"
-            }
+
             if (event.title == 'Busy') {
               newStyle.backgroundColor = "red"
+            }
+            else if(event.title == 'Unavailable Room'){
+                newStyle.backgroundColor = "orange"
+            }
+            else{
+                newStyle.backgroundColor = "blue"
             }
             // if (event.busy_time_id) {
             //   newStyle.backgroundColor = "orange"

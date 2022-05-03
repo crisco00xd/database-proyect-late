@@ -7,6 +7,7 @@ import BookMeeting from "./BookMeeting";
 import 'semantic-ui-css/semantic.min.css'
 import UserView from "./UserView";
 import Dashboard from "./Dashboard";
+import Schedule from "./Schedule";
 
 ReactDOM.render(
     <BrowserRouter>
@@ -15,6 +16,7 @@ ReactDOM.render(
             <Route exact path="/Home" element={<HomePage/>} />
             <Route exact path="/UserView" element={<UserView/>} />
             <Route exact path="/Dashboard" element={<Dashboard/>} />
+            <Route exact path="/Schedule" element={<Schedule/>} />
         </Routes>
     </BrowserRouter>,
     document.getElementById('root')

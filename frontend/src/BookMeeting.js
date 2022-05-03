@@ -9,6 +9,7 @@ import {add} from "react-big-calendar/lib/utils/dates";
 import {useNavigate} from "react-router-dom";
 import setIsAuth from "./UserView"
 import Select from 'react-select'
+import UserView from "./UserView";
 
 
 // Event {
@@ -71,9 +72,9 @@ function BookMeeting(){
             values.status_id = 1
             values.date_reserved = values.timeframe1
             values.date_end = values.timeframe_end
-            values.members = [values.owner_id]
+            values.members = window.user_info['email']
             values.total_members = 1
-        values.comment = document.getElementById('comment').value
+            values.comment = document.getElementById('comment').value
             window.values1 = values
 
 
@@ -93,7 +94,6 @@ function BookMeeting(){
 
         axios(config)
         .then(function (response) {
-          console.log(JSON.stringify(response.data));
           if(response.data["Appointment"] == "Success Creating Meeting"){
               alert("Created Meeting Successfully")
               setOpen(false)
@@ -116,16 +116,24 @@ function BookMeeting(){
             values.status_id = 1
             values.date_reserved = values.timeframe1
             values.date_end = values.timeframe_end
-            values.members = document.getElementById('members').value.split(',')
+            let members = window.user_info['email'] + ',' + document.getElementById('members').value
+            values.members = members.split(',')
             values.total_members = values.members.length
-        values.comment = document.getElementById('comment').value
+            values.comment = document.getElementById('comment').value
             window.values1 = values
+            console.log(values.members)
 
 
         for(let i = 0; i < values.members.length; i++){
             values.members[i] = values.members[i].replace(/ /g,'');
         }
-
+        for(let i = 1; i < values.members.length; i++){
+            if(values.members[i] == window.user_info['email']){
+                alert('Please Do Not Put Your Email In The Invitees');
+                values.members = []
+                return;
+            }
+        }
 
         var data = JSON.stringify(values);
         console.log(data)
@@ -150,20 +158,19 @@ function BookMeeting(){
 
           if(response.data["Appointment"] == "Success Creating Meeting"){
               alert("Created Meeting Successfully")
-              setOpen(false)
+              setOpen(false);
           }
           else{
               alert(response.data["Appointment"])
               return;
           }
-
-
         })
         .catch(function (error) {
           console.log(error);
         });
 
     }
+
 
     const getAvailableRoom = (e) => {
 

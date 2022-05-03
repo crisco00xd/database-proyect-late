@@ -89,10 +89,16 @@ class Appointments(db.Model):
     @staticmethod
     def getAvailableRoomByTimeframe(tid):
         sql = text(
-            "Select Distinct on (room_id) room.room_id, room.name From room Where room.room_id not in (Select Distinct room_id from unavailabletimestamps Where :td >= date_reserved AND :td2 <= date_end)")
+            "Select Distinct on (room_id) room.room_id, room.name From room Where room.room_id not in \
+                (Select Distinct room_id from unavailabletimestamps Where (date_reserved between :date_reserved \
+                and :date_end \
+                or date_end between :date_reserved \
+                and :date_end \
+                or (date_reserved <= :date_reserved and \
+                date_end >= :date_end)))")
         try:
-            return db.engine.execute(sql, {'td': tid['timeframe1'],
-                                           'td2': tid['timeframe_end']})
+            return db.engine.execute(sql, {'date_reserved': tid['timeframe1'],
+                                           'date_end': tid['timeframe_end']})
         except Exception as error:
             print(error)
             return error

@@ -5,11 +5,17 @@ import moment from 'moment';
 import {Button, Card, Container, Modal} from "semantic-ui-react";
 import {Bar, BarChart, CartesianGrid, Legend, Tooltip, XAxis, YAxis} from "recharts";
 import axios from "axios";
+import {useNavigate} from "react-router-dom";
 
 
 function BookMeeting(){
     const [refresh, doRefresh] = useState([]);
     const [data, setData] = useState([]);
+    const navigate = useNavigate();
+    if(window.login != true || window.login == undefined){
+        alert("NOT LOGGED IN")
+        navigate('/home');
+    }
     let count = 0;
     const [values, setValues] = useState({});
     const findMostUsedRoom = (e) => {

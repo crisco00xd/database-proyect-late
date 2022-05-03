@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 import {Button, Divider, Form, Grid, Header, Modal, Segment, Tab} from 'semantic-ui-react';
 import './HomePage.css'
 import setIsAuth from "./UserView"
-
+import validator from 'validator'
 function HomePage() {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
@@ -41,6 +41,18 @@ function HomePage() {
             alert("Blank Username or Password! \n\n Please Try Again");
             return;
         }
+
+        if(document.getElementById('rank_id').value > 3 || document.getElementById('rank_id').value < 0){
+            alert('Rank not valid');
+            return;
+        }
+
+        if (validator.isEmail(values.email)){}
+        else {
+            alert('Email is not Valid!');
+            return;
+        }
+
         window.values1 = values
         var data = JSON.stringify(values);
         console.log(data)
@@ -108,7 +120,6 @@ function HomePage() {
               return;
             }
           if(window.user_info = response.data['user']){
-              alert("Your User ID is: " + response.data['user']['user_id'])
               console.log("Logged_in");
               window.login = true
               navigate('/UserView');
@@ -179,6 +190,7 @@ function HomePage() {
                                 icon='lock'
                                 iconPosition='left'
                                 label='password'
+                                type='password'
                                 onChange = {handleChange}
                             />
                             <Form.Input

@@ -12,11 +12,11 @@ import Dashboard from "./Dashboard";
 import UserSettings from "./UserSettings";
 
 
-
 function UserView(){
     const navigate = useNavigate();
     const [isAuth, setIsAuth] = useState(false)
     let panes = [];
+    const [state, setState] = useState({ activeIndex: 1 });
 
     function logout(){
         window.login = false
@@ -37,6 +37,10 @@ function UserView(){
           console.log(isAuth)
       }
     })
+    const handleRangeChange = (e) => setState({ activeIndex: e.target.value })
+    const handleTabChange = (e, { activeIndex }) => {setState({ activeIndex }); console.log('Index ' + activeIndex); console.log('State ' + activeIndex)}
+    const { activeIndex } = state
+
 
     if(isAuth){
         panes = [
@@ -80,7 +84,9 @@ function UserView(){
             }
         ]
     }
-    return <Tab panes={panes}/>
+    return <Tab panes={panes}
+                activeIndex={activeIndex}
+                onTabChange={handleTabChange}/>
 
 
 }

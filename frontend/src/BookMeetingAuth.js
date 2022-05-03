@@ -72,10 +72,10 @@ function BookMeeting(){
             values.date_reserved = current_info['start']
             values.date_end = current_info['end']
         }
-            values.user_id = window.user_info['user_id']
+            values.user_id = 0
             values.room_name = document.getElementById('room_name').value
             values.rank_id = window.user_info['rank_id']
-            values.comment = 'MARKED BUSY BY THIS USER'
+            values.comment = 'Unavailable Room'
 
 
         var data = JSON.stringify(values);
@@ -94,12 +94,13 @@ function BookMeeting(){
         .then(function (response) {
           console.log(JSON.stringify(response.data));
           if(response.data){
-              alert("Success Adding TimeFrame Busy")
+              alert(response.data)
               setOpen2(false)
           }
         })
         .catch(function (error) {
-          console.log(error);
+            alert("Room Does Not Exist")
+            console.log(error);
         });
 
     }
@@ -426,9 +427,13 @@ function BookMeeting(){
 
         axios(config)
         .then(function (response) {
+            console.log(response.data)
           if(response.data['message'] == "Success Deleting!"){
                 alert("Successfully Deleting Room!");
                 setOpen5(false);
+          }else{
+              alert('Room Does Not Exists');
+              return;
           }
         })
         .catch(function (error) {
