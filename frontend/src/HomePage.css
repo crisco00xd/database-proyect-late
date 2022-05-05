@@ -6,3 +6,7 @@ border-radius: 2px;
 background-color: #5cc54e;
 color: #fff;
 }
+
+.book-meeting .rbc-btn-group{
+    display: none !important;
+}
