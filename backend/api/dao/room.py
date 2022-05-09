@@ -7,12 +7,10 @@ class Room(db.Model):
     room_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(24), nullable=False)
     stock = db.Column(db.Integer, nullable=False)
-    dept_id = db.Column(db.Integer, db.ForeignKey('departments.dept_id'), nullable=False)
 
     def __init__(self, **args):
         self.name = args.get('name')
         self.stock = args.get('stock')
-        self.dept_id = args.get('dept_id')
 
     @property
     def pk(self):
@@ -49,23 +47,12 @@ class Room(db.Model):
         except Exception as error:
             print(error)
             return error
-     
-    @staticmethod
-    def getRoomByDepartment(did):
-        sql = text("Select * from room Where dept_id = :did")
-        try:
-            return db.engine.execute(sql, {'did': did['dept_id']})
-
-        except Exception as error:
-            print(error)
-            return error
 
     def create(pid):
-        sql = text("Insert into room(name, stock, dept_id) Values (:rname, :sid, :did)")
+        sql = text("Insert into room(name, stock) Values (:rname, :sid)")
         try:
             db.engine.execute(sql, {'rname': pid['room_name'],
-                                    'sid': pid['stock'],
-                                    'did': pid['dept_id']})
+                                    'sid': pid['stock']})
             return 'Success creating room'
 
         except Exception as error:
@@ -97,12 +84,11 @@ class Room(db.Model):
 
     @staticmethod
     def updateRoom(pid):
-        sql = text("UPDATE room SET name = :new_name, dept_id = :did, stock = :pid WHERE name = :rname")
+        sql = text("UPDATE room SET name = :new_name, stock = :pid WHERE name = :rname")
         try:
             db.engine.execute(sql, {'pid': pid['stock'],
                                     'rname': pid['room_name'],
-                                    'new_name': pid['new_name'],
-                                    'did': pid['dept_id']})
+                                    'new_name': pid['new_name']})
             return 'Success updating room'
 
         except Exception as error:

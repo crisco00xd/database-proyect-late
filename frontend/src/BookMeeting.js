@@ -278,11 +278,18 @@ function BookMeeting() {
 
 
     //TODO Add for loop for all rooms
-    return(
+    return (
         <Container className='book-meeting' style={{ height: 800 }}>
-
-        <DatePicker disableClock={true} onChange={((e) => setSelectedDate(e))} value={selectedDate}/>
-
+            <br></br>
+            <center>
+                <h2>Select Booking Date:</h2>
+                <DatePicker disableClock={true} onChange={((e) => setSelectedDate(e))} value={selectedDate} />
+                <br></br><br></br><br></br>
+            <h2>Select Hour:</h2>
+            <h4>NOTE: HOURS ARE IN 24 HOUR FORMAT (MILITARY HOURS)</h4> 
+            <p><h5>Select Hour By Draging On The Calendar Below:</h5></p>
+            <br></br>
+            </center>
             <Calendar
                 selectable
                 localizer={localizer}
@@ -361,6 +368,7 @@ function BookMeeting() {
                     onClick={makeUserBusy}
                 > Make My Time Unavailable </Button>
             </Container>
+            <br></br><br></br><br></br>
         </Container>)
 
 

@@ -382,7 +382,6 @@ function BookMeeting(){
         values.new_name = document.getElementById('room_name5').value
 
 
-        values.dept_id = 1
         values.stock = 1
 
 
@@ -476,7 +475,6 @@ function BookMeeting(){
         var axios = require('axios');
 
         values.room_name = document.getElementById('room_name2').value
-        values.dept_id = 1
         values.stock = 1
 
 

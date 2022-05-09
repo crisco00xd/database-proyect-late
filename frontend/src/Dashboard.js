@@ -79,6 +79,10 @@ function BookMeeting(){
             let i = 0;
             doRefresh([]);
             while(response.data['Available'][i]){
+              if(response.data['Available'][i]['first_name'] == 'Busy'){
+                i+=1;
+                continue;
+              }
                 refresh.push({"name": response.data['Available'][i]['first_name'] + ' ' + response.data['Available'][i]['last_name'], "Counts": response.data['Available'][i]['count']});
                 i+=1;
             }

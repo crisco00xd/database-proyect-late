@@ -62,24 +62,6 @@ class RoomHandler:
         except Exception as e:
             return jsonify(reason="Server error", error=e.__str__()), 500
 
-    @staticmethod
-    def getRoomByDepartment(did):
-        try:
-            room = Room.getRoomByDepartment(did)
-            d, a = {}, []
-            for rowproxy in room:
-                # rowproxy.items() returns an array like [(key0, value0), (key1, value1)]
-                for column, value in rowproxy.items():
-                    # build up the dictionary
-                    d = {**d, **{column: value}}
-                a.append(d)
-            result = {
-                "message": "Success!",
-                "Room": a
-            }
-            return jsonify(result), 200
-        except Exception as e:
-            return jsonify(reason="Server error", error=e.__str__()), 500
 
     @staticmethod
     def createRoom(pid):

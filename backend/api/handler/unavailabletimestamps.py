@@ -34,6 +34,16 @@ class UnavailableTimestampsHandler:
         except Exception as e:
             return jsonify(reason="Server error", error=e.__str__()), 500
 
+    @staticmethod
+    def deleteBusyRoom(sid):
+        try:
+            deleteAppointment = UnavailableTimestamps.deleteBusyRoom(sid)
+            result = {
+                "response": deleteAppointment
+            }
+            return jsonify(result), 200
+        except Exception as e:
+            return jsonify(reason="Server error", error=e.__str__()), 500
 
     @staticmethod
     def getUnavailableTimestampsNameById(sid):

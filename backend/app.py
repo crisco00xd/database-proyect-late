@@ -1,7 +1,6 @@
 from flask import request
 from api.dao import *
 from api.util.config import app, db
-from api.handler.departments import DepartmentsHandler
 from api.handler.room import RoomHandler
 from api.handler.appointments import AppointmentsHandler
 from api.handler.unavailabletimestamps import UnavailableTimestampsHandler
@@ -23,10 +22,6 @@ def getSchedule():
 def createMeetingWithPeers():
     return AppointmentsHandler.createMeeting(request.json)
 
-
-@app.route('/departments', methods=['GET'])
-def getAllDepartments():
-    return DepartmentsHandler.getAllDepartments()
 
 
 @app.route('/rooms-available-timeframe', methods=['POST'])
@@ -64,11 +59,6 @@ def getAllRoomOrCreate():
         return RoomHandler.createRoom(request.json)
 
 
-@app.route('/departments/<int:did>', methods=['GET'])
-def getDepartmentById(did):
-    return DepartmentsHandler.getDepartmentById(did)
-
-
 @app.route('/rooms/room-by-name', methods=['POST'])
 def getRoomByName():
     return RoomHandler.getroomByName(request.json)
@@ -77,16 +67,6 @@ def getRoomByName():
 @app.route('/rooms/room-by-id', methods=['POST'])
 def getRoomById():
     return RoomHandler.getRoomById(request.json)
-
-
-@app.route('/rooms/dept/<int:did>', methods=['GET'])
-def getRoomByDeptId(did):
-    return RoomHandler.getRoomByDepartment(did)
-
-
-@app.route('/rooms/normal/dept/<int:did>', methods=['GET'])
-def getNormalRoomByDeptId(did):
-    return RoomHandler.getNormalRoomByDepartment(did)
 
 
 @app.route('/Appointments', methods=['GET', 'POST'])
@@ -114,6 +94,10 @@ def deleteAppointment():
 def deleteUnavailableTimestamp():
     return UnavailableTimestampsHandler.deleteUnavailableTimestamps(request.json)
 
+@app.route('/delete-room-busy', methods=['POST'])
+def deleteRoomBusy():
+    return UnavailableTimestampsHandler.deleteBusyRoom(request.json)
+
 
 @app.route('/Appointments/get-meeting', methods=['POST'])
 def getAppointmentsByUser():
@@ -123,21 +107,6 @@ def getAppointmentsByUser():
 @app.route('/Appointments/update-meeting', methods=['POST'])
 def updateMeeting():
     return AppointmentsHandler.updateAppointment(request.json)
-
-
-@app.route('/Appointments/dept/<int:dept_id>', methods=['GET'])
-def getAllAppointmentsByDept(dept_id):
-    return AppointmentsHandler.getAllAppointmentsByDepartment(dept_id)
-
-
-@app.route('/Appointments/pending/dept/<int:dept_id>', methods=['GET'])
-def getUnfulfilledAppointmentsByDept(dept_id):
-    return AppointmentsHandler.getUnfulfilledAppointmentsByDepartment(dept_id)
-
-
-@app.route('/Appointments/history/dept/<int:dept_id>', methods=['GET'])
-def getAppointmentsHistoryByDepartment(dept_id):
-    return AppointmentsHandler.getAppointmentsHistoryByDepartment(dept_id)
 
 
 @app.route('/Appointments/room/get-owner-by-timeframe', methods=['POST'])
