@@ -38,7 +38,15 @@ class UnavailableTimestamps(db.Model):
         except Exception as error:
             print(error)
             return error
-
+    @staticmethod
+    def deleteBusyRoom(rid):
+        try:
+            sql = text("delete from unavailabletimestamps Where  date_reserved = :date_reserved AND user_id = 0")
+            db.engine.execute(sql, {'date_reserved': rid['date_reserved']})
+            return "Success"
+        except Exception as error:
+            print(error)
+            return error
     @staticmethod
     def getUnavailableTimestampsById(stat_id):
         return UnavailableTimestamps().query.filter_by(UnavailableTimestamps_id=stat_id).first()
