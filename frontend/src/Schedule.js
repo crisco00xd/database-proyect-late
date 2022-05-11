@@ -114,7 +114,7 @@ function Schedule() {
 
     var config = {
       method: 'POST',
-      url: 'http://127.0.0.1:5000/user-schedule',
+      url: 'https://cristian-solo-db-proyect.herokuapp.com/user-schedule',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -164,7 +164,7 @@ function Schedule() {
 
     var config = {
       method: 'POST',
-      url: 'http://127.0.0.1:5000/userbusy/user-busy-get',
+      url: 'https://cristian-solo-db-proyect.herokuapp.com/userbusy/user-busy-get',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -208,7 +208,7 @@ function Schedule() {
 
     var config = {
       method: 'POST',
-      url: 'http://127.0.0.1:5000/Appointments/get-meeting',
+      url: 'https://cristian-solo-db-proyect.herokuapp.com/Appointments/get-meeting',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -240,7 +240,7 @@ function Schedule() {
 
     var config = {
       method: 'POST',
-      url: 'http://127.0.0.1:5000/Appointments/get-meeting',
+      url: 'https://cristian-solo-db-proyect.herokuapp.com/Appointments/get-meeting',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -275,7 +275,7 @@ function Schedule() {
 
     var config = {
       method: 'POST',
-      url: 'http://127.0.0.1:5000/Appointments/update-meeting',
+      url: 'https://cristian-solo-db-proyect.herokuapp.com/Appointments/update-meeting',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -319,7 +319,7 @@ function Schedule() {
 
     var config = {
       method: 'POST',
-      url: 'http://127.0.0.1:5000/Appointments/delete-meeting',
+      url: 'https://cristian-solo-db-proyect.herokuapp.com/Appointments/delete-meeting',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -348,7 +348,7 @@ function Schedule() {
 
     var config = {
       method: 'POST',
-      url: 'http://127.0.0.1:5000/rooms/room-by-id',
+      url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms/room-by-id',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -380,7 +380,7 @@ function Schedule() {
 
     var config = {
       method: 'POST',
-      url: 'http://127.0.0.1:5000/userbusy/user-busy-delete',
+      url: 'https://cristian-solo-db-proyect.herokuapp.com/userbusy/user-busy-delete',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -410,7 +410,7 @@ function Schedule() {
 
     var config = {
       method: 'POST',
-      url: 'http://127.0.0.1:5000/Appointments/delete-unavailable',
+      url: 'https://cristian-solo-db-proyect.herokuapp.com/Appointments/delete-unavailable',
       headers: {
         'Content-Type': 'application/json'
       },
@@ -439,7 +439,7 @@ function Schedule() {
 
     var config = {
       method: 'POST',
-      url: 'http://127.0.0.1:5000/delete-room-busy',
+      url: 'https://cristian-solo-db-proyect.herokuapp.com/delete-room-busy',
       headers: {
         'Content-Type': 'application/json'
       },

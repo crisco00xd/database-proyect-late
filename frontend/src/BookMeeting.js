@@ -144,7 +144,7 @@ function BookMeeting() {
 
         var config = {
             method: 'POST',
-            url: 'http://127.0.0.1:5000/Appointments',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/Appointments',
             headers: {
                 'Content-Type': 'application/json'
             },

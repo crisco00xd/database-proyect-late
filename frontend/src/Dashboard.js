@@ -127,7 +127,7 @@ function BookMeeting(){
         var data = JSON.stringify(values);
         var config = {
           method: 'post',
-          url: 'http://127.0.0.1:5000/statistics/user-most-booked-user',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/statistics/user-most-booked-user',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -156,7 +156,7 @@ function BookMeeting(){
         var data = JSON.stringify(values);
         var config = {
           method: 'post',
-          url: 'http://127.0.0.1:5000/statistics/most-booked-room-by-user',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/statistics/most-booked-room-by-user',
           headers: {
             'Content-Type': 'application/json'
           },
