@@ -392,6 +392,7 @@ function Schedule() {
         if (response.data['response'] == 'Success Deleting User Busy Status') {
           alert("Deleted Busy Status Successfully");
           setRefresh(!(refresh));
+          setOpen1(false);
         } else {
           alert('Could Not Delete Busy Status');
         }
@@ -434,7 +435,10 @@ function Schedule() {
   async function deleteRoomBusy() {
     var axios = require('axios');
 
-
+    if(window.user_info['rank_id'] != 0 && window.user_info['rank_id'] != 3){
+      alert('Your Not Allowed To Do This!');
+      return;
+    }
     var data = JSON.stringify(values);
 
     var config = {

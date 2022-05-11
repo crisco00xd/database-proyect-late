@@ -76,7 +76,7 @@ function BookMeeting() {
         values.status_id = 1
         values.date_reserved = values.timeframe1
         values.date_end = values.timeframe_end
-        values.members = window.user_info['email']
+        values.members = [window.user_info['email']]
         values.total_members = 1
         values.comment = document.getElementById('comment').value
         window.values1 = values
@@ -101,6 +101,9 @@ function BookMeeting() {
                 if (response.data["Appointment"] == "Success Creating Meeting") {
                     alert("Created Meeting Successfully")
                     setOpen(false)
+                }
+                else{
+                    alert(response.data["Appointment"]);
                 }
 
 

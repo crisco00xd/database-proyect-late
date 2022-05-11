@@ -79,7 +79,7 @@ function BookMeeting(){
             let i = 0;
             doRefresh([]);
             while(response.data['Available'][i]){
-              if(response.data['Available'][i]['first_name'] == 'Busy'){
+              if(response.data['Available'][i]['first_name'] == 'Admin'){
                 i+=1;
                 continue;
               }
