@@ -59,7 +59,7 @@ function HomePage() {
 
         var config = {
           method: 'POST',
-          url: 'http://localhost:5000/create-user',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/create-user',
           headers: { 
             'Content-Type': 'application/json'
           },
@@ -100,7 +100,7 @@ function HomePage() {
 
         var config = {
           method: 'POST',
-          url: 'http://localhost:5000/login',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/login',
           headers: { 
             'Content-Type': 'application/json'
           },

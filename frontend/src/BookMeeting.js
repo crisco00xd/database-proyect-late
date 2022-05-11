@@ -89,7 +89,7 @@ function BookMeeting() {
 
         var config = {
             method: 'POST',
-            url: 'http://localhost:5000/Appointments',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/Appointments',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -198,7 +198,7 @@ function BookMeeting() {
 
         var config = {
             method: 'POST',
-            url: 'http://localhost:5000/rooms-available-timeframe',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms-available-timeframe',
             headers: {
                 'Content-Type': 'application/json'
             },
@@ -249,7 +249,7 @@ function BookMeeting() {
 
         var config = {
             method: 'POST',
-            url: 'http://localhost:5000/userbusy/create-user-busy',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/userbusy/create-user-busy',
             headers: {
                 'Content-Type': 'application/json'
             },

@@ -23,7 +23,7 @@ function BookMeeting(){
 
         var config = {
           method: 'post',
-          url: 'http://localhost:5000/statistics/used-room',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/statistics/used-room',
           headers: {
             'Content-Type': 'application/json'
           }
@@ -43,7 +43,7 @@ function BookMeeting(){
 
         var config = {
           method: 'post',
-          url: 'http://localhost:5000/statistics/busy-hours',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/statistics/busy-hours',
           headers: {
             'Content-Type': 'application/json'
           }
@@ -69,7 +69,7 @@ function BookMeeting(){
 
         var config = {
           method: 'post',
-          url: 'http://localhost:5000/statistics/busy-users',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/statistics/busy-users',
           headers: {
             'Content-Type': 'application/json'
           }
@@ -99,7 +99,7 @@ function BookMeeting(){
 
         var config = {
           method: 'post',
-          url: 'http://localhost:5000/statistics/busy-rooms',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/statistics/busy-rooms',
           headers: {
             'Content-Type': 'application/json'
           }

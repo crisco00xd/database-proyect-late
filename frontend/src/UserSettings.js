@@ -73,7 +73,7 @@ function BookMeeting(){
 
         var config = {
           method: 'put',
-          url: 'http://localhost:5000/update-user',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/update-user',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -105,7 +105,7 @@ function BookMeeting(){
 
         var config = {
           method: 'delete',
-          url: 'http://localhost:5000/delete-user',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/delete-user',
           headers: {
             'Content-Type': 'application/json'
           },

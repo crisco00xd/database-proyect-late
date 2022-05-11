@@ -83,7 +83,7 @@ function BookMeeting(){
 
         var config = {
           method: 'post',
-          url: 'http://localhost:5000/make-busy-room',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/make-busy-room',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -129,7 +129,7 @@ function BookMeeting(){
 
         var config = {
           method: 'POST',
-          url: 'http://localhost:5000/Appointments',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/Appointments',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -172,7 +172,7 @@ function BookMeeting(){
 
         var config = {
           method: 'post',
-          url: 'http://localhost:5000/user/get-user-by-email',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/user/get-user-by-email',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -217,7 +217,7 @@ function BookMeeting(){
 
         var config = {
           method: 'post',
-          url: 'http://localhost:5000/user/get-user-by-email',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/user/get-user-by-email',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -260,7 +260,7 @@ function BookMeeting(){
 
         var config = {
           method: 'post',
-          url: 'http://localhost:5000/user/get-user-by-email',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/user/get-user-by-email',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -321,7 +321,7 @@ function BookMeeting(){
 
         var config = {
           method: 'put',
-          url: 'http://localhost:5000/update-user',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/update-user',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -353,7 +353,7 @@ function BookMeeting(){
 
         var config = {
           method: 'post',
-          url: 'http://localhost:5000/rooms/room-by-name',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms/room-by-name',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -389,7 +389,7 @@ function BookMeeting(){
 
         var config = {
           method: 'put',
-          url: 'http://localhost:5000/rooms',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -417,7 +417,7 @@ function BookMeeting(){
 
         var config = {
           method: 'DELETE',
-          url: 'http://localhost:5000/rooms',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -449,7 +449,7 @@ function BookMeeting(){
 
         var config = {
           method: 'POST',
-          url: 'http://localhost:5000/user/get-user-by-id',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/user/get-user-by-id',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -485,7 +485,7 @@ function BookMeeting(){
 
         var config = {
           method: 'POST',
-          url: 'http://localhost:5000/rooms',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -524,7 +524,7 @@ function BookMeeting(){
 
         var config = {
           method: 'POST',
-          url: 'http://localhost:5000/rooms-available-timeframe',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms-available-timeframe',
           headers: { 
             'Content-Type': 'application/json'
           },
@@ -560,7 +560,7 @@ function BookMeeting(){
 
         var config = {
           method: 'post',
-          url: 'http://localhost:5000/rooms-schedule',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms-schedule',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -606,7 +606,7 @@ function BookMeeting(){
 
         var config = {
           method: 'post',
-          url: 'http://localhost:5000/Appointments/room/get-owner-by-timeframe',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/Appointments/room/get-owner-by-timeframe',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -645,7 +645,7 @@ function BookMeeting(){
 
         var config = {
           method: 'post',
-          url: 'http://localhost:5000/user-schedule',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/user-schedule',
           headers: {
             'Content-Type': 'application/json'
           },
@@ -685,7 +685,7 @@ function BookMeeting(){
 
         var config = {
           method: 'post',
-          url: 'http://localhost:5000/user-schedule',
+          url: 'https://cristian-solo-db-proyect.herokuapp.com/user-schedule',
           headers: {
             'Content-Type': 'application/json'
           },
