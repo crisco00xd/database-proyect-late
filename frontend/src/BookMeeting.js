@@ -335,7 +335,7 @@ function BookMeeting() {
                         <h5> Meeting Name: </h5>
                         <Form.Input
                             id='comment'
-                            icon='lock'
+                            icon='write'
                             iconPosition='left'
                             placeholder='comment'
                             type='text'
@@ -344,7 +344,7 @@ function BookMeeting() {
                         <h5> Invitees: </h5>
                         <Form.Input
                             id='members'
-                            icon='lock'
+                            icon='users'
                             iconPosition='left'
                             placeholder='members'
                             type='text'

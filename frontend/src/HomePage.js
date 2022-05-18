@@ -157,10 +157,10 @@ function HomePage() {
                         <Form>
                             <Form.Input
                                 id = 'email'
-                                icon='user'
+                                icon='mail'
                                 iconPosition='left'
-                                label='email'
-                                placeholder='email'
+                                label='Email'
+                                placeholder='Email'
                                 type='email'
                                 onChange = {handleChange}
                             />
@@ -179,9 +179,9 @@ function HomePage() {
                     <Form>
                         <Form.Input
                                 id = 'email1'
-                                icon='user'
+                                icon='mail'
                                 iconPosition='left'
-                                label='email'
+                                label='Email'
                                 placeholder='email'
                                 onChange = {handleChange}
                             />
@@ -197,15 +197,16 @@ function HomePage() {
                                 id = 'first_name'
                                 icon='user'
                                 iconPosition='left'
-                                label='first_name'
-                                placeholder='first_name'
+                                label='First Name'
+                                placeholder='First Name'
                                 onChange = {handleChange}
                             />
                             <Form.Input
                                 id = 'last_name'
-                                icon='lock'
+                                icon='user'
                                 iconPosition='left'
-                                label='last_name'
+                                label='Last Name'
+                                placeholder='Last Name'
                                 onChange = {handleChange}
                             />
                             <Form.Input
@@ -213,9 +214,11 @@ function HomePage() {
                                 icon='lock'
                                 iconPosition='left'
                                 label='Rank (0 = admin, 1 = Student, 2 = Professor, 3 = Department_staff)'
+                                placeholder='Rank ID'
                                 onChange = {handleChange}
                             />
                         </Form>
+                        <br></br>
                         <Button content='Sign up' icon='signup' size='big' onClick={createUser}/>
                     </Grid.Column>
                 </Grid>

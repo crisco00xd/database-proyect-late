@@ -592,7 +592,7 @@ function Schedule() {
         <Form>
           <Form.Input
             id='date_reserved1'
-            icon='lock'
+            icon='calendar outline'
             iconPosition='left'
             label='Start Date'
             placeholder='Start Date'
@@ -604,7 +604,7 @@ function Schedule() {
 
           <Form.Input
             id='date_end'
-            icon='lock'
+            icon='calendar outline'
             iconPosition='left'
             label='End Date'
             placeholder='end_date'
@@ -615,7 +615,7 @@ function Schedule() {
           />
           <Form.Input
             id='room_name'
-            icon='lock'
+            icon='numbered list'
             iconPosition='left'
             label='Room'
             placeholder='Room'
@@ -666,7 +666,7 @@ function Schedule() {
 
           <Form.Input
             id='comment'
-            icon='lock'
+            icon='write'
             iconPosition='left'
             label='Meeting Name'
             placeholder='Meeting Name'
@@ -695,7 +695,7 @@ function Schedule() {
         <Form>
           <Form.Input
             id='date_reserved'
-            icon='lock'
+            icon='calendar outline'
             iconPosition='left'
             label='Start Date'
             placeholder='Start Date'
@@ -706,7 +706,7 @@ function Schedule() {
 
           <Form.Input
             id='date_end'
-            icon='lock'
+            icon='calendar outline'
             iconPosition='left'
             label='End Date'
             placeholder='end_date'
@@ -732,7 +732,7 @@ function Schedule() {
         <Form>
         <Form.Input
             id='room_name'
-            icon='lock'
+            icon='numbered list'
             iconPosition='left'
             label='Unavailable Room'
             placeholder='Unavailable Room'
@@ -743,7 +743,7 @@ function Schedule() {
           />
           <Form.Input
             id='date_reserved'
-            icon='lock'
+            icon='calendar outline'
             iconPosition='left'
             label='Start Date'
             placeholder='Start Date'
@@ -755,7 +755,7 @@ function Schedule() {
 
           <Form.Input
             id='date_end'
-            icon='lock'
+            icon='calendar outline'
             iconPosition='left'
             label='End Date'
             placeholder='end_date'

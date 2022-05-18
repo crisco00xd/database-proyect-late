@@ -1,12 +1,12 @@
-import React, {Component, useState} from 'react';
-import {Calendar, momentLocalizer, Views } from 'react-big-calendar';
+import React, { Component, useState } from 'react';
+import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-import {Button, Card, Container, Modal, Form} from "semantic-ui-react";
-import user_info  from "./HomePage";
+import { Button, Card, Container, Modal, Form } from "semantic-ui-react";
+import user_info from "./HomePage";
 import axios from "axios";
-import {add} from "react-big-calendar/lib/utils/dates";
-import {useNavigate} from "react-router-dom";
+import { add } from "react-big-calendar/lib/utils/dates";
+import { useNavigate } from "react-router-dom";
 import setIsAuth from "./UserView"
 import reportWebVitals from "./reportWebVitals";
 import Select from 'react-select'
@@ -19,17 +19,17 @@ import Select from 'react-select'
 //         allDay?: boolean
 //     resource?: any,
 // }
- 
+
 let elements = [];
 
-function BookMeeting(){
+function BookMeeting() {
     const navigate = useNavigate();
-    if(window.login != true || window.login == undefined){
+    if (window.login != true || window.login == undefined) {
         alert("NOT LOGGED IN")
         navigate('/home');
     }
     const initialstate = {
-        "roomdata" : [],
+        "roomdata": [],
         "user_info": [],
         "user_result": []
     }
@@ -53,10 +53,10 @@ function BookMeeting(){
     const handleChange = e => {
         const { name, value } = e.target;
         setValues({
-          ...values,
-          [name]: value
+            ...values,
+            [name]: value
         });
-      };
+    };
 
     const [values, setValues] = useState(initialstate);
 
@@ -64,62 +64,62 @@ function BookMeeting(){
         var axios = require('axios');
         let current_info = dates.pop()
 
-        if(current_info == undefined){
+        if (current_info == undefined) {
             alert("Please Select Dates")
             return
         }
-        else{
+        else {
             values.date_reserved = current_info['start']
             values.date_end = current_info['end']
         }
-            values.user_id = 0
-            values.room_name = document.getElementById('room_name').value
-            values.rank_id = window.user_info['rank_id']
-            values.comment = 'Unavailable Room'
+        values.user_id = 0
+        values.room_name = document.getElementById('room_name').value
+        values.rank_id = window.user_info['rank_id']
+        values.comment = 'Unavailable Room'
 
 
         var data = JSON.stringify(values);
         console.log(data)
 
         var config = {
-          method: 'post',
-          url: 'https://cristian-solo-db-proyect.herokuapp.com/make-busy-room',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data : data
+            method: 'post',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/make-busy-room',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
 
         axios(config)
-        .then(function (response) {
-          console.log(JSON.stringify(response.data));
-          if(response.data){
-              alert(response.data)
-              setOpen2(false)
-          }
-        })
-        .catch(function (error) {
-            alert("Room Does Not Exist")
-            console.log(error);
-        });
+            .then(function (response) {
+                console.log(JSON.stringify(response.data));
+                if (response.data) {
+                    alert(response.data)
+                    setOpen2(false)
+                }
+            })
+            .catch(function (error) {
+                alert("Room Does Not Exist")
+                console.log(error);
+            });
 
     }
 
     const create_appointment = (e) => {
-            var axios = require('axios');
-            let current_info = dates.pop()
+        var axios = require('axios');
+        let current_info = dates.pop()
 
 
-            values.owner_id = window.user_info['user_id']
-            values.stock = 1
-            values.room_id = document.getElementById('room_number').value
-            values.rank_id = window.user_info['rank_id']
-            values.status_id = 1
-            values.date_reserved = values.timeframe1
-            values.date_end = values.timeframe_end
-            values.members = [1]
-            values.total_members = values.members.length
-            window.values1 = values
+        values.owner_id = window.user_info['user_id']
+        values.stock = 1
+        values.room_id = document.getElementById('room_number').value
+        values.rank_id = window.user_info['rank_id']
+        values.status_id = 1
+        values.date_reserved = values.timeframe1
+        values.date_end = values.timeframe_end
+        values.members = [1]
+        values.total_members = values.members.length
+        window.values1 = values
 
 
 
@@ -128,27 +128,27 @@ function BookMeeting(){
         console.log(data)
 
         var config = {
-          method: 'POST',
-          url: 'https://cristian-solo-db-proyect.herokuapp.com/Appointments',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data : data
+            method: 'POST',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/Appointments',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
 
         axios(config)
-        .then(function (response) {
-          console.log(JSON.stringify(response.data));
-          if(response.data["Appointment"] == "Success Creating Meeting"){
-              alert("Created Meeting Successfully")
-              setOpen(false)
-          }
+            .then(function (response) {
+                console.log(JSON.stringify(response.data));
+                if (response.data["Appointment"] == "Success Creating Meeting") {
+                    alert("Created Meeting Successfully")
+                    setOpen(false)
+                }
 
 
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
 
     }
 
@@ -158,7 +158,7 @@ function BookMeeting(){
 
         values.email = document.getElementById('email1').value
 
-        if(values.email == ''){
+        if (values.email == '') {
             alert('No Blank Spaces Please')
             return;
         }
@@ -171,30 +171,30 @@ function BookMeeting(){
         var data = JSON.stringify(values);
 
         var config = {
-          method: 'post',
-          url: 'https://cristian-solo-db-proyect.herokuapp.com/user/get-user-by-email',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data : data
+            method: 'post',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/user/get-user-by-email',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
 
         axios(config)
-        .then(function (response) {
-          if(response.data['user'].length > 0){
-              values.user_result = response.data['user'][0]
-              console.log(values.user_result)
-                setOpen1(false);
-                setOpen13(true);
-          }
-          else{
-              alert('No User Found With That Email');
-              return;
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+            .then(function (response) {
+                if (response.data['user'].length > 0) {
+                    values.user_result = response.data['user'][0]
+                    console.log(values.user_result)
+                    setOpen1(false);
+                    setOpen13(true);
+                }
+                else {
+                    alert('No User Found With That Email');
+                    return;
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
 
@@ -203,7 +203,7 @@ function BookMeeting(){
 
         values.email = document.getElementById('email2').value
 
-        if(values.email == ''){
+        if (values.email == '') {
             alert('No Blank Spaces Please')
             return;
         }
@@ -216,28 +216,28 @@ function BookMeeting(){
         var data = JSON.stringify(values);
 
         var config = {
-          method: 'post',
-          url: 'https://cristian-solo-db-proyect.herokuapp.com/user/get-user-by-email',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data : data
+            method: 'post',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/user/get-user-by-email',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
 
         axios(config)
-        .then(function (response) {
-          if(response.data['user'].length > 0){
-              values.user_id = response.data['user'][0]['user_id'];
-              readUser();
-          }
-          else{
-              alert('No User Found With That Email');
-              return;
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+            .then(function (response) {
+                if (response.data['user'].length > 0) {
+                    values.user_id = response.data['user'][0]['user_id'];
+                    readUser();
+                }
+                else {
+                    alert('No User Found With That Email');
+                    return;
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
 
@@ -246,7 +246,7 @@ function BookMeeting(){
 
         values.email = document.getElementById('email3').value
 
-        if(values.email == ''){
+        if (values.email == '') {
             alert('No Blank Spaces Please')
             return;
         }
@@ -259,28 +259,28 @@ function BookMeeting(){
         var data = JSON.stringify(values);
 
         var config = {
-          method: 'post',
-          url: 'https://cristian-solo-db-proyect.herokuapp.com/user/get-user-by-email',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data : data
+            method: 'post',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/user/get-user-by-email',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
 
         axios(config)
-        .then(function (response) {
-          if(response.data['user'].length > 0){
-              values.user_id = response.data['user'][0]['user_id'];
-              getUserSchedule();
-          }
-          else{
-              alert('No User Found With That Email');
-              return;
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+            .then(function (response) {
+                if (response.data['user'].length > 0) {
+                    values.user_id = response.data['user'][0]['user_id'];
+                    getUserSchedule();
+                }
+                else {
+                    alert('No User Found With That Email');
+                    return;
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
 
@@ -294,24 +294,24 @@ function BookMeeting(){
         values.rank_id = window.user_info['rank_id']
         values.user_id = window.user_info['user_id']
 
-        if(values.email == ''){
+        if (values.email == '') {
             alert("Please No Blank Spaces");
             return;
         }
 
-        if(values.first_name == ''){
-            alert("Please No Blank Spaces");
-            return;
-        }
-
-
-        if(values.last_name == ''){
+        if (values.first_name == '') {
             alert("Please No Blank Spaces");
             return;
         }
 
 
-        if(values.password == ''){
+        if (values.last_name == '') {
+            alert("Please No Blank Spaces");
+            return;
+        }
+
+
+        if (values.password == '') {
             alert("Please No Blank Spaces");
             return;
         }
@@ -320,27 +320,27 @@ function BookMeeting(){
         var data = JSON.stringify(values);
 
         var config = {
-          method: 'put',
-          url: 'https://cristian-solo-db-proyect.herokuapp.com/update-user',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data : data
+            method: 'put',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/update-user',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
 
         axios(config)
-        .then(function (response) {
-          if(response.data['response'] == "Successfully Edited User"){
-                alert("Successfully Edited User Info");
-                window.user_info['email'] = values.email
-                setOpen13(false);
-          }else{
-              alert(response.data['response']);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+            .then(function (response) {
+                if (response.data['response'] == "Successfully Edited User") {
+                    alert("Successfully Edited User Info");
+                    window.user_info['email'] = values.email
+                    setOpen13(false);
+                } else {
+                    alert(response.data['response']);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     const getRoomByName = (e) => {
@@ -352,27 +352,27 @@ function BookMeeting(){
         var data = JSON.stringify(values);
 
         var config = {
-          method: 'post',
-          url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms/room-by-name',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data : data
+            method: 'post',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms/room-by-name',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
 
         axios(config)
-        .then(function (response) {
-          if(response.data['Room'].length != 0){
-                alert("Room With That Name Already Exists");
-                return
-          }
-          else{
-              modifyRoom();
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+            .then(function (response) {
+                if (response.data['Room'].length != 0) {
+                    alert("Room With That Name Already Exists");
+                    return
+                }
+                else {
+                    modifyRoom();
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     const modifyRoom = (e) => {
@@ -388,24 +388,24 @@ function BookMeeting(){
         var data = JSON.stringify(values);
 
         var config = {
-          method: 'put',
-          url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data : data
+            method: 'put',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
 
         axios(config)
-        .then(function (response) {
-          if(response.data['message'] == "Success Updating Room!"){
-                alert("Successfully Edited Room Info");
-                setOpen4(false);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+            .then(function (response) {
+                if (response.data['message'] == "Success Updating Room!") {
+                    alert("Successfully Edited Room Info");
+                    setOpen4(false);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     const deleteRoom = (e) => {
@@ -416,28 +416,28 @@ function BookMeeting(){
         var data = JSON.stringify(values);
 
         var config = {
-          method: 'DELETE',
-          url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data : data
+            method: 'DELETE',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
 
         axios(config)
-        .then(function (response) {
-            console.log(response.data)
-          if(response.data['message'] == "Success Deleting!"){
-                alert("Successfully Deleting Room!");
-                setOpen5(false);
-          }else{
-              alert('Room Does Not Exists');
-              return;
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+            .then(function (response) {
+                console.log(response.data)
+                if (response.data['message'] == "Success Deleting!") {
+                    alert("Successfully Deleting Room!");
+                    setOpen5(false);
+                } else {
+                    alert('Room Does Not Exists');
+                    return;
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     const readUser = (e) => {
@@ -448,27 +448,27 @@ function BookMeeting(){
         console.log(data)
 
         var config = {
-          method: 'POST',
-          url: 'https://cristian-solo-db-proyect.herokuapp.com/user/get-user-by-id',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data : data
+            method: 'POST',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/user/get-user-by-id',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
 
         axios(config)
-        .then(function (response) {
-          if(response.data['User'].length > 0){
-                values.user_info= response.data['User']
-                setOpen6(false);
-                setOpen7(true);
-          }else{
-              alert("No Info On User Exists! Please Try Again!");
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+            .then(function (response) {
+                if (response.data['User'].length > 0) {
+                    values.user_info = response.data['User']
+                    setOpen6(false);
+                    setOpen7(true);
+                } else {
+                    alert("No Info On User Exists! Please Try Again!");
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 
     const createRoom = (e) => {
@@ -484,70 +484,70 @@ function BookMeeting(){
         var data = JSON.stringify(values);
 
         var config = {
-          method: 'POST',
-          url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data : data
+            method: 'POST',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
 
         axios(config)
-        .then(function (response) {
-          if(response.data['message'] == "Success Creating Room!"){
-                alert("Successfully Created Room!");
-                setOpen3(false);
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+            .then(function (response) {
+                if (response.data['message'] == "Success Creating Room!") {
+                    alert("Successfully Created Room!");
+                    setOpen3(false);
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
     const getAvailableRoom = (e) => {
         var axios = require('axios');
         let current_info = dates.pop()
 
-        if(current_info == undefined){
+        if (current_info == undefined) {
             alert("Please Select Dates")
             return
         }
-        else{
+        else {
             values.timeframe1 = current_info['start']
             values.timeframe_end = current_info['end']
         }
 
-        
-        
-        
+
+
+
         var data = JSON.stringify(values);
         console.log(data)
 
         var config = {
-          method: 'POST',
-          url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms-available-timeframe',
-          headers: { 
-            'Content-Type': 'application/json'
-          },
-          data : data
+            method: 'POST',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms-available-timeframe',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
         axios(config)
-        .then(function (response) {
-          if(response.data['Appointments']){
-              window.roomdata = response.data['Appointments']
-              console.log(window.roomdata)
-              if(Object.keys(window.roomdata).length == 0) {
-                  alert("No Rooms Available")
-              }else{
-                  values.roomdata = window.roomdata
-                  setOpen(true)
-              }
+            .then(function (response) {
+                if (response.data['Appointments']) {
+                    window.roomdata = response.data['Appointments']
+                    console.log(window.roomdata)
+                    if (Object.keys(window.roomdata).length == 0) {
+                        alert("No Rooms Available")
+                    } else {
+                        values.roomdata = window.roomdata
+                        setOpen(true)
+                    }
 
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-        
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
     }
 
     const getRoomSchedule = (e) => {
@@ -559,31 +559,31 @@ function BookMeeting(){
         console.log(data)
 
         var config = {
-          method: 'post',
-          url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms-schedule',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data : data
+            method: 'post',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/rooms-schedule',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
         axios(config)
-        .then(function (response) {
-          if(response.data['Appointments']){
-              window.roomdata = response.data['Appointments']
-              console.log(window.roomdata)
-              if(Object.keys(window.roomdata).length == 0) {
-                  alert("This Room Has No Schedule");
-              }else{
-                  values.roomdata = window.roomdata
-                  setOpen8(false);
-                  setOpen9(true);
-              }
+            .then(function (response) {
+                if (response.data['Appointments']) {
+                    window.roomdata = response.data['Appointments']
+                    console.log(window.roomdata)
+                    if (Object.keys(window.roomdata).length == 0) {
+                        alert("This Room Has No Schedule");
+                    } else {
+                        values.roomdata = window.roomdata
+                        setOpen8(false);
+                        setOpen9(true);
+                    }
 
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
 
     }
 
@@ -592,11 +592,11 @@ function BookMeeting(){
 
         let current_info = dates.pop()
 
-        if(current_info == undefined){
+        if (current_info == undefined) {
             alert("Please Select Dates")
             return
         }
-        else{
+        else {
             values.timeframe = current_info['start']
             values.timeframe2 = current_info['end']
         }
@@ -605,31 +605,31 @@ function BookMeeting(){
         console.log(data)
 
         var config = {
-          method: 'post',
-          url: 'https://cristian-solo-db-proyect.herokuapp.com/Appointments/room/get-owner-by-timeframe',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data : data
+            method: 'post',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/Appointments/room/get-owner-by-timeframe',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
         axios(config)
-        .then(function (response) {
-          if(response.data['Appointments']){
-              window.roomdata = response.data['Appointments']
-              console.log(window.roomdata);
+            .then(function (response) {
+                if (response.data['Appointments']) {
+                    window.roomdata = response.data['Appointments']
+                    console.log(window.roomdata);
 
-              if(Object.keys(window.roomdata).length == 0) {
-                  alert("This Timeframe Has No Schedule");
-              }else{
-                  values.roomdata = window.roomdata;
-                  createElements2();
-                  setOpen12(true);
-              }
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+                    if (Object.keys(window.roomdata).length == 0) {
+                        alert("This Timeframe Has No Schedule");
+                    } else {
+                        values.roomdata = window.roomdata;
+                        createElements2();
+                        setOpen12(true);
+                    }
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
 
     }
 
@@ -644,31 +644,31 @@ function BookMeeting(){
         console.log(data)
 
         var config = {
-          method: 'post',
-          url: 'https://cristian-solo-db-proyect.herokuapp.com/user-schedule',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data : data
+            method: 'post',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/user-schedule',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
         axios(config)
-        .then(function (response) {
-          if(response.data['Appointments']){
-              window.roomdata = response.data['Appointments']
-              console.log(window.roomdata)
-              if(Object.keys(window.roomdata).length == 0) {
-                  alert("This User Has No Schedule");
-              }else{
-                  values.roomdata = window.roomdata
-                  setOpen10(false);
-                  setOpen11(true);
-              }
+            .then(function (response) {
+                if (response.data['Appointments']) {
+                    window.roomdata = response.data['Appointments']
+                    console.log(window.roomdata)
+                    if (Object.keys(window.roomdata).length == 0) {
+                        alert("This User Has No Schedule");
+                    } else {
+                        values.roomdata = window.roomdata
+                        setOpen10(false);
+                        setOpen11(true);
+                    }
 
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
 
     }
 
@@ -684,129 +684,137 @@ function BookMeeting(){
         console.log(data)
 
         var config = {
-          method: 'post',
-          url: 'https://cristian-solo-db-proyect.herokuapp.com/user-schedule',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          data : data
+            method: 'post',
+            url: 'https://cristian-solo-db-proyect.herokuapp.com/user-schedule',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: data
         };
         axios(config)
-        .then(function (response) {
-          if(response.data['Appointments']){
-              window.roomdata = response.data['Appointments']
-              console.log(window.roomdata)
-              if(Object.keys(window.roomdata).length == 0) {
-                  alert("This User Has No Schedule");
-              }else{
-                  values.roomdata = window.roomdata
-                  setOpen10(false);
-                  setOpen11(true);
-              }
+            .then(function (response) {
+                if (response.data['Appointments']) {
+                    window.roomdata = response.data['Appointments']
+                    console.log(window.roomdata)
+                    if (Object.keys(window.roomdata).length == 0) {
+                        alert("This User Has No Schedule");
+                    } else {
+                        values.roomdata = window.roomdata
+                        setOpen10(false);
+                        setOpen11(true);
+                    }
 
-          }
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
 
     }
 
-    function createElements(){
+    function createElements() {
         let elements = [];
         let i = 0;
 
-        while(values.roomdata[i]){
-            elements.push(<div>Room: {values.roomdata[i]['name']} Room Number: {values.roomdata[i]['room_id']}</div>);
+        while (values.roomdata[i]) {
+            elements.push(<div>Room: {values.roomdata[i]['name']}</div>);
             i += 1
         }
         return elements;
     }
 
-    function createElements2(){
+    function createElements2() {
         let result = new Map();
         let mySet = new Set();
         let i = 0;
 
-        while(values.roomdata[i]){
+        while (values.roomdata[i]) {
             let room_name = values.roomdata[i]['name'];
             mySet.add(room_name);
-            if(!result.has(room_name)){
+            if (!result.has(room_name)) {
                 result.set(room_name, []);
             }
             result.get(room_name).push(
                 <div>First Name: {values.roomdata[i]['first_name']}
-                <br></br> Last Name: {values.roomdata[i]['last_name']} <br></br>
-                Date Reserved: {values.roomdata[i]['date_reserved']} <br></br>
-                End Date: {values.roomdata[i]['date_end']}<br></br> Room: {values.roomdata[i]['name']}
-                <br></br><br></br></div>);
+                    <br></br> Last Name: {values.roomdata[i]['last_name']} <br></br>
+                    Date Reserved: {values.roomdata[i]['date_reserved']} <br></br>
+                    End Date: {values.roomdata[i]['date_end']}<br></br> Room: {values.roomdata[i]['name']}
+                    <br></br><br></br></div>);
 
             i += 1
         }
 
         let arr = Array.from(mySet);
-        for(let i = 0; i < arr.length; i++){
-              elements.push({label: arr[i],
-                value: result.get(arr[i])});
+        for (let i = 0; i < arr.length; i++) {
+            elements.push({
+                label: arr[i],
+                value: result.get(arr[i])
+            });
         }
     }
 
-        function createElements1(){
+    function createElements1() {
         let elements = [];
         let i = 0;
 
-        while(values.roomdata[i]){
+        while (values.roomdata[i]) {
             elements.push(<div>Room: {values.roomdata[i]['name']} <br></br> Room Number: {values.roomdata[i]['room_id']} <br></br> Date Reserved: {values.roomdata[i]['date_reserved']} <br></br> End Date: {values.roomdata[i]['date_end']}<br></br><br></br></div>);
             i += 1
         }
         return elements;
     }
 
-    function createElementsforUserInfo(){
+    function createElementsforUserInfo() {
         let elements = [];
         let i = 0;
 
-        while(values.user_info[i]){
+        while (values.user_info[i]) {
             elements.push(<div>Email: {values.user_info[0]['email']} <br></br>First Name: {values.user_info[0]['first_name']} <br></br> Last Name: {values.user_info[0]['last_name']}<br></br> Rank ID: {values.user_info[0]['rank_id']}<br></br> User ID: {values.user_info[0]['user_id']} </div>);
             i += 1
         }
         return elements;
     }
-    function createElementsforUserSchedule(){
+    function createElementsforUserSchedule() {
         let elements = [];
         let i = 0;
 
-        while(values.roomdata[i]){
+        while (values.roomdata[i]) {
+            if (values.roomdata[i]['first_name'] == 'Admin') {
+                i += 1
+                continue;
+            }
             elements.push(<div>Date Reserved: {values.roomdata[i]['date_reserved']} <br></br>Date End: {values.roomdata[i]['date_end']} <br></br> First Name: {values.roomdata[i]['first_name']}<br></br> Last Name: {values.roomdata[i]['last_name']}<br></br><br></br><br></br> </div>);
             i += 1
         }
         return elements;
     }
-    function logout(){
+    function logout() {
         window.login = false
         console.log("NOT LOGGED IN")
         navigate('/home');
     }
 
 
-        //TODO Add for loop for all rooms
-    return <Container style={{ height: 800 }}><Calendar
-        selectable
-        localizer={localizer}
-        startAccessor="start"
-        events={dates}
-        endAccessor="end"
-        views={["month", "day"]}
-        defaultDate={Date.now()}
-        onSelecting = {(selected) =>{ setDates([{
-                        'title': 'Selection',
-                        'allDay': false,
-                        'start': new Date(selected.start),
-                        'end': new Date(selected.end)
-                    }] ) } }
-    >
-
-    </Calendar>
+    //TODO Add for loop for all rooms
+    return <Container style={{ height: 800 }}>
+        <Calendar
+            selectable
+            localizer={localizer}
+            startAccessor="start"
+            events={dates}
+            endAccessor="end"
+            views={["month", "day"]}
+            defaultDate={Date.now()}
+            onSelecting={(selected) => {
+                setDates([{
+                    'title': 'Selection',
+                    'allDay': false,
+                    'start': new Date(selected.start),
+                    'end': new Date(selected.end)
+                }])
+            }}
+        >
+        </Calendar>
         <Modal
             centered={false}
             open={open}
@@ -829,20 +837,20 @@ function BookMeeting(){
         >
             <Modal.Header>Enter User's Email To Modify</Modal.Header>
             <Modal.Content>
-            <Form>
+                <Form>
 
-                <Form.Input
-                                id = 'email1'
-                                icon='lock'
-                                iconPosition='left'
-                                label='Email'
-                                placeholder='email'
-                                type='text'
-                                onChange = {handleChange}
-                />
+                    <Form.Input
+                        id='email1'
+                        icon='mail'
+                        iconPosition='left'
+                        label='Email'
+                        placeholder='Email'
+                        type='text'
+                        onChange={handleChange}
+                    />
 
-                <Button className='appointment-btn' content='Search User' primary onClick={searchUser}/>
-            </Form>
+                    <Button className='appointment-btn' content='Search User' primary onClick={searchUser} />
+                </Form>
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => setOpen1(false)}>Cancel</Button>
@@ -858,53 +866,53 @@ function BookMeeting(){
         >
             <Modal.Header>Modify User Information</Modal.Header>
             <Modal.Content>
-            <Form>
+                <Form>
 
-                <Form.Input
-                                id = 'email1'
-                                icon='lock'
-                                iconPosition='left'
-                                label='Email'
-                                placeholder='email'
-                                type='text'
-                                defaultValue={values.user_result['email']}
-                                onChange = {handleChange}
-                />
-                <Form.Input
-                                id = 'first_name'
-                                icon='lock'
-                                iconPosition='left'
-                                label='First Name'
-                                placeholder='first_name'
-                                type='text'
-                                defaultValue = {values.user_result['first_name']}
-                                onChange = {handleChange}
-                />
+                    <Form.Input
+                        id='email1'
+                        icon='mail'
+                        iconPosition='left'
+                        label='Email'
+                        placeholder='Email'
+                        type='text'
+                        defaultValue={values.user_result['email']}
+                        onChange={handleChange}
+                    />
+                    <Form.Input
+                        id='first_name'
+                        icon='user'
+                        iconPosition='left'
+                        label='First Name'
+                        placeholder='First Name'
+                        type='text'
+                        defaultValue={values.user_result['first_name']}
+                        onChange={handleChange}
+                    />
 
-                <Form.Input
-                                id = 'last_name'
-                                icon='lock'
-                                iconPosition='left'
-                                label='Last Name'
-                                placeholder='last_name'
-                                type='text'
-                                defaultValue = {values.user_result['last_name']}
-                                onChange = {handleChange}
-                />
+                    <Form.Input
+                        id='last_name'
+                        icon='user'
+                        iconPosition='left'
+                        label='Last Name'
+                        placeholder='Last Name'
+                        type='text'
+                        defaultValue={values.user_result['last_name']}
+                        onChange={handleChange}
+                    />
 
-                <Form.Input
-                                id = 'password'
-                                icon='lock'
-                                iconPosition='left'
-                                label='Password'
-                                placeholder='password'
-                                type='password'
-                                defaultValue = {values.user_result['password']}
-                                onChange = {handleChange}
-                />
+                    <Form.Input
+                        id='password'
+                        icon='lock'
+                        iconPosition='left'
+                        label='Password'
+                        placeholder='password'
+                        type='password'
+                        defaultValue={values.user_result['password']}
+                        onChange={handleChange}
+                    />
 
-                <Button className='appointment-btn' content='Update User' primary onClick={updateUser}/>
-            </Form>
+                    <Button className='appointment-btn' content='Update User' primary onClick={updateUser} />
+                </Form>
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => setOpen13(false)}>Cancel</Button>
@@ -923,18 +931,18 @@ function BookMeeting(){
         >
             <Modal.Header>Choose a Room!</Modal.Header>
             <Modal.Content>
-            <Form>
-                <Form.Input
-                                id = 'room_name'
-                                icon='lock'
-                                iconPosition='left'
-                                label='Room ID'
-                                placeholder='room_name'
-                                type='text'
-                                onChange = {handleChange}
-                />
-                <Button className='appointment-btn' content='Mark Busy' primary onClick={timeBusy}/>
-            </Form>
+                <Form>
+                    <Form.Input
+                        id='room_name'
+                        icon='numbered list'
+                        iconPosition='left'
+                        label='Room Name'
+                        placeholder='Room Name'
+                        type='text'
+                        onChange={handleChange}
+                    />
+                    <Button className='appointment-btn' content='Mark Busy' primary onClick={timeBusy} />
+                </Form>
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => setOpen2(false)}>Cancel</Button>
@@ -949,18 +957,18 @@ function BookMeeting(){
         >
             <Modal.Header>Add a Room!</Modal.Header>
             <Modal.Content>
-            <Form>
-                <Form.Input
-                                id = 'room_name2'
-                                icon='lock'
-                                iconPosition='left'
-                                label='Room Name'
-                                placeholder='room_name'
-                                type='text'
-                                onChange = {handleChange}
-                />
-                <Button className='appointment-btn' content='Create Room!' primary onClick={createRoom}/>
-            </Form>
+                <Form>
+                    <Form.Input
+                        id='room_name2'
+                        icon='numbered list'
+                        iconPosition='left'
+                        label='Room Name'
+                        placeholder='Room Name'
+                        type='text'
+                        onChange={handleChange}
+                    />
+                    <Button className='appointment-btn' content='Create Room!' primary onClick={createRoom} />
+                </Form>
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => setOpen3(false)}>Cancel</Button>
@@ -974,28 +982,28 @@ function BookMeeting(){
         >
             <Modal.Header>Modify Room Information</Modal.Header>
             <Modal.Content>
-            <Form>
-                <Form.Input
-                                id = 'room_name1'
-                                icon='lock'
-                                iconPosition='left'
-                                label='Room To Edit'
-                                placeholder='Name'
-                                type='text'
-                                onChange = {handleChange}
-                />
+                <Form>
+                    <Form.Input
+                        id='room_name1'
+                        icon='numbered list'
+                        iconPosition='left'
+                        label='Room To Edit'
+                        placeholder='Name'
+                        type='text'
+                        onChange={handleChange}
+                    />
 
-                <Form.Input
-                                id = 'room_name5'
-                                icon='lock'
-                                iconPosition='left'
-                                label='New Room Name'
-                                placeholder='Name'
-                                type='text'
-                                onChange = {handleChange}
-                />
-                <Button className='appointment-btn' content='Update Room' primary onClick={getRoomByName}/>
-            </Form>
+                    <Form.Input
+                        id='room_name5'
+                        icon='numbered list'
+                        iconPosition='left'
+                        label='New Room Name'
+                        placeholder='Name'
+                        type='text'
+                        onChange={handleChange}
+                    />
+                    <Button className='appointment-btn' content='Update Room' primary onClick={getRoomByName} />
+                </Form>
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => setOpen4(false)}>Cancel</Button>
@@ -1009,18 +1017,18 @@ function BookMeeting(){
         >
             <Modal.Header>Delete Room</Modal.Header>
             <Modal.Content>
-            <Form>
-                <Form.Input
-                                id = 'room_name4'
-                                icon='lock'
-                                iconPosition='left'
-                                label='Room Name'
-                                placeholder='Name'
-                                type='text'
-                                onChange = {handleChange}
-                />
-                <Button className='appointment-btn' content='Delete Room' primary onClick={deleteRoom}/>
-            </Form>
+                <Form>
+                    <Form.Input
+                        id='room_name4'
+                        icon='numbered list'
+                        iconPosition='left'
+                        label='Room Name'
+                        placeholder='Name'
+                        type='text'
+                        onChange={handleChange}
+                    />
+                    <Button className='appointment-btn' content='Delete Room' primary onClick={deleteRoom} />
+                </Form>
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => setOpen5(false)}>Cancel</Button>
@@ -1035,18 +1043,18 @@ function BookMeeting(){
         >
             <Modal.Header>Get User Information By ID Search</Modal.Header>
             <Modal.Content>
-            <Form>
-                <Form.Input
-                                id = 'email2'
-                                icon='lock'
-                                iconPosition='left'
-                                label='Email'
-                                placeholder='Email'
-                                type='text'
-                                onChange = {handleChange}
-                />
-                <Button className='appointment-btn' content='Get User Info' primary onClick={searchUserByEmail}/>
-            </Form>
+                <Form>
+                    <Form.Input
+                        id='email2'
+                        icon='mail'
+                        iconPosition='left'
+                        label='Email'
+                        placeholder='Email'
+                        type='text'
+                        onChange={handleChange}
+                    />
+                    <Button className='appointment-btn' content='Get User Info' primary onClick={searchUserByEmail} />
+                </Form>
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => setOpen6(false)}>Cancel</Button>
@@ -1076,18 +1084,18 @@ function BookMeeting(){
         >
             <Modal.Header>Choose a Room!</Modal.Header>
             <Modal.Content>
-            <Form>
-                <Form.Input
-                                id = 'room_name3'
-                                icon='lock'
-                                iconPosition='left'
-                                label='Room Name'
-                                placeholder='Name'
-                                type='text'
-                                onChange = {handleChange}
-                />
-                <Button className='appointment-btn' content='Find Schedule' primary onClick={getRoomSchedule}/>
-            </Form>
+                <Form>
+                    <Form.Input
+                        id='room_name3'
+                        icon='lock'
+                        iconPosition='left'
+                        label='Room Name'
+                        placeholder='Name'
+                        type='text'
+                        onChange={handleChange}
+                    />
+                    <Button className='appointment-btn' content='Find Schedule' primary onClick={getRoomSchedule} />
+                </Form>
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => setOpen8(false)}>Cancel</Button>
@@ -1116,18 +1124,18 @@ function BookMeeting(){
         >
             <Modal.Header>Choose a User!</Modal.Header>
             <Modal.Content>
-            <Form>
-                <Form.Input
-                                id = 'email3'
-                                icon='lock'
-                                iconPosition='left'
-                                label='User ID'
-                                placeholder='Email'
-                                type='text'
-                                onChange = {handleChange}
-                />
-                <Button className='appointment-btn' content='Find Schedule' primary onClick={searchUserForScheduleByEmail}/>
-            </Form>
+                <Form>
+                    <Form.Input
+                        id='email3'
+                        icon='mail'
+                        iconPosition='left'
+                        label='User Email'
+                        placeholder='Email'
+                        type='text'
+                        onChange={handleChange}
+                    />
+                    <Button className='appointment-btn' content='Find Schedule' primary onClick={searchUserForScheduleByEmail} />
+                </Form>
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => setOpen10(false)}>Cancel</Button>
@@ -1153,24 +1161,24 @@ function BookMeeting(){
             centered={false}
             open={open12}
             onClose={() => {
-                    setOpen12(false);
-                    elements = [];
-                    setValues(initialstate);
-                }}
+                setOpen12(false);
+                elements = [];
+                setValues(initialstate);
+            }}
             onOpen={() => setOpen12(true)}
         >
             <Modal.Header>Room Schedule</Modal.Header>
             <Modal.Content>
                 <Select
-                        options={elements}
-                        placeholder={'Select...'}
-                        clearable={false}
-                        onChange={((e) => {setValues({ ...values, ...{ ['room_name']: e, ['room_list']: e.value} }); console.log(values.room_name);})}
-                        name="room_name"
-                        value={values.room_name}
+                    options={elements}
+                    placeholder={'Select...'}
+                    clearable={false}
+                    onChange={((e) => { setValues({ ...values, ...{ ['room_name']: e, ['room_list']: e.value } }); console.log(values.room_name); })}
+                    name="room_name"
+                    value={values.room_name}
                 />
                 <br></br>
-            <div>{values.room_list}</div>
+                <div>{values.room_list}</div>
             </Modal.Content>
             <Modal.Actions>
                 <Button onClick={() => {
@@ -1184,55 +1192,55 @@ function BookMeeting(){
         <Container fluid>
             <br></br>
             <h1>TimeFrame Settings</h1>
-        <Button
-            fluid
-            onClick={getAvailableRoom}
-        > Search For Available Rooms In A TimeFrame </Button>
-        <Button
-            fluid
-            onClick={() => setOpen2(true)}
-        > Mark TimeFrame as Unavailable</Button>
+            <Button
+                fluid
+                onClick={getAvailableRoom}
+            > Search For Available Rooms In A TimeFrame </Button>
+            <Button
+                fluid
+                onClick={() => setOpen2(true)}
+            > Mark TimeFrame as Unavailable</Button>
             <br></br>
             <br></br>
             <h1>Users Settings</h1>
             <Button
-            fluid
-            onClick={() => setOpen1(true)}
+                fluid
+                onClick={() => setOpen1(true)}
             > Modify User Information</Button>
             <Button
-            fluid
-            onClick={() => setOpen6(true)}
+                fluid
+                onClick={() => setOpen6(true)}
             > Read User Info By ID</Button>
             <Button
-            fluid
-            onClick={() => setOpen10(true)}
+                fluid
+                onClick={() => setOpen10(true)}
             > Get All User Schedule</Button>
             <Button
-            fluid
-            onClick={getOwnerByTimeframe}
+                fluid
+                onClick={getOwnerByTimeframe}
             > See Who Appointed A Room At A Certain Time</Button>
             <br></br>
             <br></br>
             <h1>Room Settings</h1>
             <Button
-            fluid
-            onClick={() => setOpen8(true)}
+                fluid
+                onClick={() => setOpen8(true)}
             > Find A Room Schedule</Button>
             <Button
-            fluid
-            onClick={() => setOpen3(true)}
+                fluid
+                onClick={() => setOpen3(true)}
             > Add New Room</Button>
             <Button
-            fluid
-            onClick={() => setOpen4(true)}
+                fluid
+                onClick={() => setOpen4(true)}
             > Modify Room Information</Button>
             <Button
-            fluid
-            onClick={() => setOpen5(true)}
+                fluid
+                onClick={() => setOpen5(true)}
             > Delete Room</Button>
             <br></br>
             <br></br>
-    </Container>
+        </Container>
     </Container>
 
 }
