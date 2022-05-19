@@ -173,8 +173,7 @@ class UnavailableTimestamps(db.Model):
     @staticmethod
     def findMostBookedRoom(rid):
         try:
-            sql = text(
-                "select name, count(*) as count from unavailabletimestamps natural inner join room group by name order by count desc limit 10")
+            sql = text("select name, count(*) as count from appointments natural inner join room group by name order by count desc limit 10")
             return db.engine.execute(sql)
         except Exception as error:
             print(error)

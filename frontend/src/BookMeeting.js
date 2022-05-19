@@ -287,7 +287,7 @@ function BookMeeting() {
             <center>
                 <h2>Select Booking Date:</h2>
                 <DatePicker disableClock={true} onChange={((e) => setSelectedDate(e))} value={selectedDate} />
-                <br></br><br></br><br></br>
+                <br></br><br></br><br></br><br></br><br></br><br></br>
             <h2>Select Hour:</h2>
             <h4>NOTE: HOURS ARE IN 24 HOUR FORMAT (MILITARY HOURS)</h4> 
             <p><h5>Select Hour By Draging On The Calendar Below:</h5></p>
