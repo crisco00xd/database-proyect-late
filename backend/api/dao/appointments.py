@@ -69,7 +69,7 @@ class Appointments(db.Model):
     @staticmethod
     def getWhoAppointedRoomByTime(tid):
         sql = text(
-            "Select first_name, last_name, email, date_reserved, date_end, name From appointments natural inner join users natural inner join room Where date_reserved >= :td AND date_end <= :td2 AND user_id != 0 ORDER BY date_reserved")
+            "Select first_name, last_name, email, date_reserved, date_end, name From appointments natural inner join users natural inner join room Where appointments.owner_id = users.user_id AND date_reserved >= :td AND date_end <= :td2 AND user_id != 0 ORDER BY date_reserved")
         try:
             return db.engine.execute(sql, {'td': tid['timeframe'],
                                            'td2': tid['timeframe2']})
