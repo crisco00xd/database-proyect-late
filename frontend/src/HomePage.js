@@ -213,7 +213,7 @@ function HomePage() {
                                 id = 'rank_id'
                                 icon='lock'
                                 iconPosition='left'
-                                label='Rank (0 = admin, 1 = Student, 2 = Professor, 3 = Department_staff)'
+                                label='Rank (1 = Student, 2 = Professor, 3 = Department Staff)'
                                 placeholder='Rank ID'
                                 onChange = {handleChange}
                             />
